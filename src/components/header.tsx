@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { LightningIcon, XIcon } from "@/components/icons";
+import { LightningIcon, XIcon, UserIcon, LogOutIcon } from "@/components/icons";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useAuth } from "@/components/auth-provider";
+import { SignInModal } from "@/components/auth/sign-in-modal";
 
 function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -29,8 +31,11 @@ const NAV_LINKS = [
 
 export function Header({ isSidebarVisible, onToggleSidebar }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const { user, isAuthenticated, isHydrated, logout } = useAuth();
 
   return (
+    <>
     <header className="sticky top-0 z-50 h-14 flex items-center justify-between px-4 md:px-6 bg-surface/80 backdrop-blur-xl border-b border-border">
       <div className="flex items-center gap-2">
         {onToggleSidebar && (
@@ -82,6 +87,34 @@ export function Header({ isSidebarVisible, onToggleSidebar }: HeaderProps) {
           ))}
         </nav>
 
+        {/* Desktop auth */}
+        {isHydrated && (
+          <div className="hidden md:flex items-center gap-1 mr-1">
+            {isAuthenticated ? (
+              <>
+                <span className="text-sm text-text-secondary max-w-[120px] truncate" title={user?.email}>
+                  {user?.name}
+                </span>
+                <button
+                  onClick={logout}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors"
+                  title="Sign out"
+                >
+                  <LogOutIcon className="w-4 h-4" />
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setIsSignInOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors"
+              >
+                <UserIcon className="w-4 h-4" />
+                Sign In
+              </button>
+            )}
+          </div>
+        )}
+
         <ThemeToggle />
 
         {/* Mobile menu toggle */}
@@ -108,9 +141,32 @@ export function Header({ isSidebarVisible, onToggleSidebar }: HeaderProps) {
                 {link.label}
               </Link>
             ))}
+            {isHydrated && (
+              <div className="border-t border-border mt-1 pt-1">
+                {isAuthenticated ? (
+                  <button
+                    onClick={() => { logout(); setMobileMenuOpen(false); }}
+                    className="w-full flex items-center gap-2 px-4 py-3 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors"
+                  >
+                    <LogOutIcon className="w-4 h-4" />
+                    Sign Out ({user?.name})
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { setIsSignInOpen(true); setMobileMenuOpen(false); }}
+                    className="w-full flex items-center gap-2 px-4 py-3 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors"
+                  >
+                    <UserIcon className="w-4 h-4" />
+                    Sign In
+                  </button>
+                )}
+              </div>
+            )}
           </nav>
         </div>
       )}
     </header>
+    <SignInModal isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)} />
+    </>
   );
 }

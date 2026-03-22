@@ -2,6 +2,7 @@
 
 import { SWRConfig, type Cache } from "swr";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/components/auth-provider";
 import type { ReactNode } from "react";
 import { useEffect, useCallback } from "react";
 
@@ -39,7 +40,9 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <SWRConfig value={{ provider }}>
       <ThemeProvider>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </ThemeProvider>
     </SWRConfig>
   );

@@ -13,8 +13,10 @@ import { AddChargerButton } from "@/components/add-charger/add-charger-button";
 import { AddChargerModal } from "@/components/add-charger/add-charger-modal";
 import { ToastContainer } from "@/components/ui/toast";
 import { SidebarSkeleton } from "@/components/loading-skeleton";
+import { useAuth } from "@/components/auth-provider";
 
 export function AppShell() {
+  const { isAuthenticated } = useAuth();
   const { chargers, isLoading, addCharger } = useChargers();
   const {
     filters,
@@ -45,9 +47,10 @@ export function AppShell() {
   }, []);
 
   const handleMapRightClick = useCallback((lat: number, lng: number) => {
+    if (!isAuthenticated) return;
     setAddModalInitial({ lat: lat.toFixed(6), lng: lng.toFixed(6) });
     setIsAddModalOpen(true);
-  }, []);
+  }, [isAuthenticated]);
 
   const handleAddCharger = useCallback(
     async (payload: Omit<ChargerInsertPayload, "event_type">) => {
@@ -169,7 +172,7 @@ export function AppShell() {
         )}
       </div>
 
-      <AddChargerButton onClick={handleOpenAddModal} />
+      {isAuthenticated && <AddChargerButton onClick={handleOpenAddModal} />}
 
       <AddChargerModal
         isOpen={isAddModalOpen}

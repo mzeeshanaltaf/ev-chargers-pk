@@ -62,3 +62,15 @@ export const LOCATION_TYPES = [
   "Residential",
   "Other",
 ] as const;
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+}
+
+export interface LoginResponse {
+  authorized: boolean;
+  user?: AuthUser;
+  message?: string;
+}

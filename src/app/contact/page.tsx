@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { LightningIcon } from "@/components/icons";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ interface ContactErrors {
   name?: string;
   email?: string;
   description?: string;
+  captcha?: string;
   _form?: string;
 }
 
@@ -42,8 +43,17 @@ function validateContact(data: { name: string; email: string; description: strin
   return errors;
 }
 
+function generateChallenge() {
+  const a = Math.floor(Math.random() * 10) + 1;
+  const b = Math.floor(Math.random() * 10) + 1;
+  return { a, b, answer: a + b };
+}
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: "", email: "", description: "" });
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [challenge] = useMemo(() => [generateChallenge()], []);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -59,7 +69,18 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot check — bots fill this, humans never see it
+    if (honeypot) return;
+
     const validationErrors = validateContact(formData);
+
+    if (!captchaInput.trim()) {
+      validationErrors.captcha = "Please answer the math question";
+    } else if (parseInt(captchaInput.trim(), 10) !== challenge.answer) {
+      validationErrors.captcha = "Incorrect answer, please try again";
+    }
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -171,6 +192,43 @@ export default function ContactPage() {
                   {formData.description.length}/2000
                 </span>
               </div>
+            </div>
+
+            {/* Honeypot — invisible to humans, bots auto-fill it */}
+            <div className="absolute opacity-0 -z-10 h-0 overflow-hidden" aria-hidden="true">
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
+
+            {/* Math captcha */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-text-secondary">
+                What is {challenge.a} + {challenge.b}?
+              </label>
+              <input
+                type="text"
+                inputMode="numeric"
+                value={captchaInput}
+                onChange={(e) => {
+                  setCaptchaInput(e.target.value);
+                  setErrors((prev) => {
+                    const next = { ...prev };
+                    delete next.captcha;
+                    return next;
+                  });
+                }}
+                className={`w-full px-3 py-2 rounded-lg bg-surface border border-border text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent text-sm transition-all ${
+                  errors.captcha ? "border-danger focus:ring-danger" : ""
+                }`}
+                placeholder="Your answer"
+              />
+              {errors.captcha && <p className="text-xs text-danger">{errors.captcha}</p>}
             </div>
 
             {errors._form && (
