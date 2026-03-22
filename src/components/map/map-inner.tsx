@@ -49,54 +49,21 @@ function FlyToHandler({ selectedCharger }: { selectedCharger: Charger | null }) 
   return null;
 }
 
-function FitAllControl({ chargers }: { chargers: Charger[] }) {
+function CustomControls({ chargers }: { chargers: Charger[] }) {
   const map = useMap();
-  const handleClick = () => {
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [locating, setLocating] = useState(false);
+
+  const handleFitAll = useCallback(() => {
     if (chargers.length === 0) {
       map.flyTo(PAKISTAN_CENTER, DEFAULT_ZOOM, { duration: 0.8 });
       return;
     }
     const bounds = L.latLngBounds(chargers.map((c) => [c.latitude, c.longitude]));
     map.flyToBounds(bounds, { padding: [50, 50], duration: 0.8 });
-  };
-  return (
-    <div className="leaflet-top leaflet-right" style={{ pointerEvents: "auto" }}>
-      <div className="leaflet-control leaflet-bar" style={{ marginTop: 10, marginRight: 10 }}>
-        <a
-          href="#"
-          role="button"
-          title="Fit all chargers"
-          aria-label="Fit all chargers"
-          onClick={(e) => { e.preventDefault(); handleClick(); }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 32,
-            height: 32,
-            fontSize: 16,
-            lineHeight: "30px",
-            cursor: "pointer",
-          }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 3 21 3 21 9" />
-            <polyline points="9 21 3 21 3 15" />
-            <line x1="21" y1="3" x2="14" y2="10" />
-            <line x1="3" y1="21" x2="10" y2="14" />
-          </svg>
-        </a>
-      </div>
-    </div>
-  );
-}
+  }, [map, chargers]);
 
-function MyLocationControl() {
-  const map = useMap();
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [locating, setLocating] = useState(false);
-
-  const handleClick = useCallback(() => {
+  const handleMyLocation = useCallback(() => {
     if (!navigator.geolocation) return;
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
@@ -113,32 +80,58 @@ function MyLocationControl() {
 
   return (
     <>
-      <div className="leaflet-top leaflet-right" style={{ pointerEvents: "auto" }}>
-        <div className="leaflet-control leaflet-bar" style={{ marginTop: 52, marginRight: 10 }}>
-          <a
-            href="#"
-            role="button"
-            title="My location"
-            aria-label="My location"
-            onClick={(e) => { e.preventDefault(); handleClick(); }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 32,
-              height: 32,
-              cursor: "pointer",
-              opacity: locating ? 0.5 : 1,
-            }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="4" />
-              <line x1="12" y1="2" x2="12" y2="6" />
-              <line x1="12" y1="18" x2="12" y2="22" />
-              <line x1="2" y1="12" x2="6" y2="12" />
-              <line x1="18" y1="12" x2="22" y2="12" />
-            </svg>
-          </a>
+      <div className="leaflet-top leaflet-right">
+        <div className="leaflet-control" style={{ marginTop: 10, marginRight: 10, display: "flex", flexDirection: "column", gap: 6 }}>
+          <div className="leaflet-bar" style={{ pointerEvents: "auto" }}>
+            <a
+              href="#"
+              role="button"
+              title="Fit all chargers"
+              aria-label="Fit all chargers"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleFitAll(); }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 32,
+                height: 32,
+                cursor: "pointer",
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 3 21 3 21 9" />
+                <polyline points="9 21 3 21 3 15" />
+                <line x1="21" y1="3" x2="14" y2="10" />
+                <line x1="3" y1="21" x2="10" y2="14" />
+              </svg>
+            </a>
+          </div>
+          <div className="leaflet-bar" style={{ pointerEvents: "auto" }}>
+            <a
+              href="#"
+              role="button"
+              title="My location"
+              aria-label="My location"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleMyLocation(); }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 32,
+                height: 32,
+                cursor: "pointer",
+                opacity: locating ? 0.5 : 1,
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="4" />
+                <line x1="12" y1="2" x2="12" y2="6" />
+                <line x1="12" y1="18" x2="12" y2="22" />
+                <line x1="2" y1="12" x2="6" y2="12" />
+                <line x1="18" y1="12" x2="22" y2="12" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
       {userLocation && (
@@ -196,8 +189,7 @@ export default function MapInner({
       <ThemeReactiveTileLayer />
       <FlyToHandler selectedCharger={selectedCharger} />
       <MapClickHandler onMapRightClick={onMapRightClick} />
-      <FitAllControl chargers={chargers} />
-      <MyLocationControl />
+      <CustomControls chargers={chargers} />
 
       {chargers.map((charger) => (
         <Marker
