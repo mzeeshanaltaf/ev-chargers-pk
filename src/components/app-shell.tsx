@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useChargers } from "@/hooks/use-chargers";
 import { useFilters } from "@/hooks/use-filters";
 import { useToast } from "@/hooks/use-toast";
@@ -32,6 +32,8 @@ export function AppShell() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [selectedCharger, setSelectedCharger] = useState<Charger | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+  const touchStartY = useRef<number | null>(null);
   const [addModalInitial, setAddModalInitial] = useState<{
     lat?: string;
     lng?: string;
@@ -110,32 +112,60 @@ export function AppShell() {
         </div>
       </div>
 
-      {/* Mobile bottom sheet */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-[400] bg-surface rounded-t-2xl border-t border-border shadow-2xl max-h-[60vh] overflow-y-auto">
-        <div className="flex justify-center py-2">
+      {/* Mobile bottom sheet — collapsed by default, tap handle to expand */}
+      <div
+        className={`md:hidden fixed bottom-0 left-0 right-0 z-[400] bg-surface rounded-t-2xl border-t border-border shadow-2xl transition-[max-height] duration-300 ease-in-out ${mobileSheetOpen ? "max-h-[70vh]" : "max-h-12"} overflow-hidden`}
+      >
+        {/* Drag handle / toggle */}
+        <button
+          type="button"
+          aria-label={mobileSheetOpen ? "Collapse panel" : "Expand panel"}
+          className="w-full flex flex-col items-center py-2 cursor-pointer"
+          onClick={() => setMobileSheetOpen((v) => !v)}
+          onTouchStart={(e) => { touchStartY.current = e.touches[0].clientY; }}
+          onTouchEnd={(e) => {
+            if (touchStartY.current === null) return;
+            const delta = e.changedTouches[0].clientY - touchStartY.current;
+            if (delta < -30) setMobileSheetOpen(true);
+            if (delta > 30) setMobileSheetOpen(false);
+            touchStartY.current = null;
+          }}
+        >
           <div className="w-10 h-1 rounded-full bg-border" />
-        </div>
-        <FilterBar
-          filters={filters}
-          availableProvinces={availableProvinces}
-          availableCities={availableCities}
-          availableLocationTypes={availableLocationTypes}
-          costBounds={costBounds}
-          onUpdateFilter={updateFilter}
-          onClearFilters={clearFilters}
-          hasActiveFilters={hasActiveFilters}
-        />
-        {isLoading ? (
-          <SidebarSkeleton />
-        ) : (
-          <ChargerList
-            chargers={filteredChargers}
-            selectedId={selectedCharger?.id || null}
-            onSelectCharger={handleSelectCharger}
-            totalCount={chargers.length}
-            onClearFilters={clearFilters}
-            hasActiveFilters={hasActiveFilters}
-          />
+          <span className="text-[10px] text-text-secondary mt-1">
+            {mobileSheetOpen ? "Swipe down to close" : `${filteredChargers.length} chargers — tap to view`}
+          </span>
+        </button>
+
+        {/* Content only rendered when open to avoid scroll issues */}
+        {mobileSheetOpen && (
+          <div className="overflow-y-auto" style={{ maxHeight: "calc(70vh - 3rem)" }}>
+            <FilterBar
+              filters={filters}
+              availableProvinces={availableProvinces}
+              availableCities={availableCities}
+              availableLocationTypes={availableLocationTypes}
+              costBounds={costBounds}
+              onUpdateFilter={updateFilter}
+              onClearFilters={clearFilters}
+              hasActiveFilters={hasActiveFilters}
+            />
+            {isLoading ? (
+              <SidebarSkeleton />
+            ) : (
+              <ChargerList
+                chargers={filteredChargers}
+                selectedId={selectedCharger?.id || null}
+                onSelectCharger={(charger) => {
+                  handleSelectCharger(charger);
+                  setMobileSheetOpen(false);
+                }}
+                totalCount={chargers.length}
+                onClearFilters={clearFilters}
+                hasActiveFilters={hasActiveFilters}
+              />
+            )}
+          </div>
         )}
       </div>
 
