@@ -136,6 +136,11 @@ body {
   pointer-events: auto;
 }
 
+/* Contain Leaflet's high z-indexes within the map area so controls don't overlap the header */
+.leaflet-container {
+  isolation: isolate;
+}
+
 /* Custom marker animation */
 .custom-marker {
   background: transparent !important;
