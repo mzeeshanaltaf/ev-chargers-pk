@@ -39,9 +39,9 @@ export function ChargerTypeBadge({ type }: { type: string }) {
         </svg>
       ) : (
         /* AC symbol: sine wave ~ */
-        <svg className="w-3 h-3 shrink-0" viewBox="0 0 12 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-          <path d="M1 4 C2 1.5 3 1.5 4 4 S6 6.5 7 4 S9 1.5 10 4" />
-        </svg>
+         <svg className="w-3 h-3 shrink-0" viewBox="0 0 12 8" fill="none"   stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <path d="M1 4 C3 1.5 5 1.5 6 4 S9 6.5 11 4" />
+          </svg>
       )}
       {type}
     </span>
