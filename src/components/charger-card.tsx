@@ -59,6 +59,8 @@ interface ChargerCardProps {
 
 export function ChargerCard({ charger, isSelected, onSelect, index, onEdit, onDelete }: ChargerCardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [copiedId, setCopiedId] = useState(false);
+  const shortId = charger.id.slice(-5).toUpperCase();
   const oh = charger.opening_hours;
 
   return (
@@ -214,6 +216,23 @@ export function ChargerCard({ charger, isSelected, onSelect, index, onEdit, onDe
           <p className="text-xs text-text-secondary italic line-clamp-2">{charger.notes}</p>
         </div>
       )}
+
+      <div className="flex justify-end mt-2">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(shortId).then(() => {
+              setCopiedId(true);
+              setTimeout(() => setCopiedId(false), 2000);
+            });
+          }}
+          title={charger.id}
+          className="text-xs font-mono text-text-secondary/40 hover:text-brand transition-colors"
+        >
+          {copiedId ? "Copied!" : `#${shortId}`}
+        </button>
+      </div>
     </motion.div>
   );
 }

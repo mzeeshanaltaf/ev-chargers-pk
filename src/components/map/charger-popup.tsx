@@ -49,6 +49,8 @@ function CopyMapsButton({ charger }: { charger: Charger }) {
 
 export function ChargerPopup({ charger }: ChargerPopupProps) {
   const oh = charger.opening_hours;
+  const [copiedId, setCopiedId] = useState(false);
+  const shortId = charger.id.slice(-5).toUpperCase();
 
   return (
     <div className="min-w-[200px] p-1">
@@ -67,9 +69,9 @@ export function ChargerPopup({ charger }: ChargerPopupProps) {
               <rect x="7" y="5.5" width="5" height="1.5" rx="0.75" />
             </svg>
           ) : (
-            <svg className="w-3 h-3 shrink-0" viewBox="0 0 12 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-              <path d="M1 4 C2 1.5 3 1.5 4 4 S6 6.5 7 4 S9 1.5 10 4" />
-            </svg>
+             <svg className="w-3 h-3 shrink-0" viewBox="0 0 12 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M1 4 C3 1.5 5 1.5 6 4 S9 6.5 11 4" />
+             </svg>
           )}
           {charger.charger_type}
         </span>
@@ -140,12 +142,29 @@ export function ChargerPopup({ charger }: ChargerPopupProps) {
         </div>
       )}
 
-      {/* Location type + Maps link — last */}
+      {/* Location type + Maps link */}
       <div className="flex items-center justify-between mt-2">
         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
           {charger.location_type}
         </span>
         <CopyMapsButton charger={charger} />
+      </div>
+
+      {/* Short ID — last */}
+      <div className="flex justify-end mt-1">
+        <button
+          type="button"
+          onClick={() => {
+            navigator.clipboard.writeText(shortId).then(() => {
+              setCopiedId(true);
+              setTimeout(() => setCopiedId(false), 2000);
+            });
+          }}
+          title={charger.id}
+          className="text-xs font-mono text-gray-400 hover:text-green-600 transition-colors"
+        >
+          {copiedId ? "Copied!" : `#${shortId}`}
+        </button>
       </div>
     </div>
   );
