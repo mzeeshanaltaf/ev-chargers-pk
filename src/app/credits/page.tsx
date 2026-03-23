@@ -14,8 +14,8 @@ export default function CreditsPage() {
             ChargeMap<span className="text-brand ml-0.5">PK</span>
           </span>
         </Link>
-        <Link href="/about" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
-          &larr; Back to About
+        <Link href="/" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+          &larr; Back to Map
         </Link>
       </header>
 
