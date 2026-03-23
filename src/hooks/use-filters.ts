@@ -10,7 +10,8 @@ const defaultFilters: FilterState = {
   minPower: null,
   is24hrs: null,
   locationType: null,
-  isActive: null,
+  chargerType: null,
+  isOpen: null,
 };
 
 export function useFilters(chargers: Charger[]) {
@@ -36,7 +37,7 @@ export function useFilters(chargers: Charger[]) {
 
   const costBounds = useMemo((): [number, number] => {
     if (chargers.length === 0) return [0, 200];
-    const costs = chargers.map((c) => parseFloat(c.cost_per_kwh));
+    const costs = chargers.map((c) => c.cost_per_kwh);
     return [Math.floor(Math.min(...costs)), Math.ceil(Math.max(...costs))];
   }, [chargers]);
 
@@ -45,12 +46,12 @@ export function useFilters(chargers: Charger[]) {
       if (filters.province && c.province_territory !== filters.province) return false;
       if (filters.city && c.city !== filters.city) return false;
       if (filters.locationType && c.location_type !== filters.locationType) return false;
+      if (filters.chargerType && c.charger_type !== filters.chargerType) return false;
       if (filters.is24hrs !== null && c.is_available_24hrs !== filters.is24hrs) return false;
-      if (filters.isActive !== null && c.is_active !== filters.isActive) return false;
-      if (filters.minPower !== null && parseFloat(c.power_kw) < filters.minPower) return false;
+      if (filters.isOpen !== null && c.is_open !== filters.isOpen) return false;
+      if (filters.minPower !== null && c.power_kw < filters.minPower) return false;
       if (filters.costRange) {
-        const cost = parseFloat(c.cost_per_kwh);
-        if (cost < filters.costRange[0] || cost > filters.costRange[1]) return false;
+        if (c.cost_per_kwh < filters.costRange[0] || c.cost_per_kwh > filters.costRange[1]) return false;
       }
       return true;
     });

@@ -195,7 +195,7 @@ export default function MapInner({
         <Marker
           key={charger.id}
           position={[charger.latitude, charger.longitude]}
-          icon={charger.is_active ? activeIcon : inactiveIcon}
+          icon={charger.is_open ? activeIcon : inactiveIcon}
           eventHandlers={{
             click: () => onSelectCharger(charger),
             mouseover: (e) => e.target.openPopup(),

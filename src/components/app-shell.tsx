@@ -11,13 +11,14 @@ import { ChargerList } from "@/components/charger-list";
 import { ChargerMap } from "@/components/map/charger-map";
 import { AddChargerButton } from "@/components/add-charger/add-charger-button";
 import { AddChargerModal } from "@/components/add-charger/add-charger-modal";
+import { EditChargerModal } from "@/components/edit-charger/edit-charger-modal";
 import { ToastContainer } from "@/components/ui/toast";
 import { SidebarSkeleton } from "@/components/loading-skeleton";
 import { useAuth } from "@/components/auth-provider";
 
 export function AppShell() {
   const { isAuthenticated } = useAuth();
-  const { chargers, isLoading, addCharger } = useChargers();
+  const { chargers, isLoading, addCharger, updateCharger, deleteCharger } = useChargers();
   const {
     filters,
     filteredChargers,
@@ -34,6 +35,7 @@ export function AppShell() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [selectedCharger, setSelectedCharger] = useState<Charger | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingCharger, setEditingCharger] = useState<Charger | null>(null);
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
   const touchStartY = useRef<number | null>(null);
   const [addModalInitial, setAddModalInitial] = useState<{
@@ -70,6 +72,24 @@ export function AppShell() {
     setIsAddModalOpen(true);
   }, []);
 
+  const handleUpdateCharger = useCallback(
+    async (id: string, payload: Omit<ChargerInsertPayload, "event_type">) => {
+      await updateCharger(id, payload);
+      setEditingCharger(null);
+      showToast("Charger updated successfully!");
+    },
+    [updateCharger, showToast]
+  );
+
+  const handleDeleteCharger = useCallback(
+    async (charger: Charger) => {
+      await deleteCharger(charger.id);
+      if (selectedCharger?.id === charger.id) setSelectedCharger(null);
+      showToast("Charger deleted.");
+    },
+    [deleteCharger, selectedCharger, showToast]
+  );
+
   return (
     <div className="app-shell flex flex-col h-screen bg-surface">
       <Header
@@ -100,6 +120,8 @@ export function AppShell() {
               totalCount={chargers.length}
               onClearFilters={clearFilters}
               hasActiveFilters={hasActiveFilters}
+              onEditCharger={isAuthenticated ? setEditingCharger : undefined}
+              onDeleteCharger={isAuthenticated ? handleDeleteCharger : undefined}
             />
           )}
         </div>
@@ -166,6 +188,8 @@ export function AppShell() {
                 totalCount={chargers.length}
                 onClearFilters={clearFilters}
                 hasActiveFilters={hasActiveFilters}
+                onEditCharger={isAuthenticated ? setEditingCharger : undefined}
+                onDeleteCharger={isAuthenticated ? handleDeleteCharger : undefined}
               />
             )}
           </div>
@@ -181,6 +205,12 @@ export function AppShell() {
         initialLat={addModalInitial.lat}
         initialLng={addModalInitial.lng}
         initialAddress={addModalInitial.address}
+      />
+
+      <EditChargerModal
+        charger={editingCharger}
+        onClose={() => setEditingCharger(null)}
+        onSubmit={handleUpdateCharger}
       />
 
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />

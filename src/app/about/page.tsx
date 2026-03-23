@@ -42,11 +42,15 @@ export default function AboutPage() {
             What You Can Do
           </h2>
           <ul className="list-disc list-inside space-y-2">
-            <li>Browse an interactive map of EV charging stations across all provinces</li>
-            <li>Filter chargers by province, city, power output, cost, and availability</li>
-            <li>View detailed information about each charging station</li>
-            <li>Add new charging stations to help fellow EV drivers</li>
-            <li>Right-click on the map to quickly place a new charger at any location</li>
+            <li>Browse an interactive map of EV charging stations across all provinces/territories</li>
+            <li>Filter chargers by province, city, charger type (AC/DC), power output, cost, location type, availability, and open status</li>
+            <li>View real-time open/closed status based on each station&apos;s operating hours</li>
+            <li>See detailed info per station — power, cost, peak-hour pricing, operating hours, phone number, and notes</li>
+            <li>Copy a Google Maps link for any charger directly from the card</li>
+            <li>Use your current location to find nearby charging stations</li>
+            <li>Add new charging stations including AC/DC type, peak-hour pricing, and per-day operating hours (requires sign-in)</li>
+            <li>Edit or delete charging stations you have added (requires sign-in)</li>
+            <li>Right-click on the map to quickly place a new charger at any location (requires sign-in)</li>
           </ul>
 
           <h2 className="text-xl font-semibold text-text-primary pt-4" style={{ fontFamily: "var(--font-heading)" }}>

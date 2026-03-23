@@ -33,5 +33,28 @@ export function useChargers() {
     return newChargers;
   }
 
-  return { chargers: data || [], error, isLoading, addCharger, mutate };
+  async function updateCharger(
+    id: string,
+    payload: Omit<ChargerInsertPayload, "event_type">
+  ) {
+    const res = await fetch("/api/chargers", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, ...payload }),
+    });
+    if (!res.ok) throw new Error("Failed to update charger");
+    await mutate();
+  }
+
+  async function deleteCharger(id: string) {
+    const res = await fetch("/api/chargers", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (!res.ok) throw new Error("Failed to delete charger");
+    mutate((current) => (current || []).filter((c) => c.id !== id), { revalidate: false });
+  }
+
+  return { chargers: data || [], error, isLoading, addCharger, updateCharger, deleteCharger, mutate };
 }

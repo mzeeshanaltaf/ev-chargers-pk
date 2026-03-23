@@ -1,0 +1,98 @@
+Header Authorization webhook:
+key: x-api-key
+value: N8N_API_KEY set in .env.local
+
+Get EV Chargers List:
+-------------------
+Get the list of all EV chargers available in the database
+Webhook URL: https://n8n.zeeshanai.cloud/webhook/034ffd7c-51fc-44e8-8634-6d257e3120d1
+Type: POST
+
+Body:
+{
+    "event_type": "get_ev_chargers"
+}
+
+Responses:
+
+[
+    {
+        "id": "c4e9a14c-8046-4172-9c22-47aa12fe480c",
+        "latitude": 32.78437841928006,
+        "longitude": 72.71648752888106,
+        "address": "M-2 Motorway, Kallar Kahar Motorway Service Area - South Bound",
+        "city": "Kallar Kahar",
+        "province_territory": "Punjab",
+        "location_type": "Motorway",
+        "power_kw": "240.00",
+        "cost_per_kwh": "100.00",
+        "phone_number": "03195419043",
+        "notes": "",
+        "is_available_24hrs": true,
+        "is_active": true,
+        "created_at": "2026-03-21T11:44:53.977Z",
+        "updated_at": "2026-03-21T11:44:53.980Z"
+    },
+    {
+        "id": "4ccdda55-3cdf-43c7-83ed-81d55c81fdc4",
+        "latitude": 33.71913445951154,
+        "longitude": 73.06756893031796,
+        "address": "Attock Petrol Pump, 104 Jinnah Ave, G 7/3 Blue Area, Islamabad, Pakistan",
+        "city": "Islamabad",
+        "province_territory": "ICT",
+        "location_type": "City",
+        "power_kw": "150.00",
+        "cost_per_kwh": "110.00",
+        "phone_number": "",
+        "notes": "",
+        "is_available_24hrs": true,
+        "is_active": true,
+        "created_at": "2026-03-21T11:46:18.969Z",
+        "updated_at": "2026-03-21T11:46:18.970Z"
+    }
+]
+
+Insert EV Charger:
+-------------------
+Insert EV charger details in database
+Webhook URL: https://n8n.zeeshanai.cloud/webhook/034ffd7c-51fc-44e8-8634-6d257e3120d1
+Type: POST
+
+Body:
+{
+    "event_type": "insert_ev_charger",
+    "latitude": "33.71913445951154",
+    "longitude": "73.06756893031796",
+    "address": "Attock Petrol Pump, 104 Jinnah Ave, G 7/3 Blue Area, Islamabad, Pakistan",
+    "city": "Islamabad",
+    "province_territory": "ICT",
+    "location_type": "City",
+    "power_kw": "150",
+    "cost_per_kw": "110",
+    "phone_number": "",
+    "notes": "",
+    "is_available_24hrs": true,
+    "is_active": true
+}
+
+Responses:
+
+[
+    {
+        "id": "4ccdda55-3cdf-43c7-83ed-81d55c81fdc4",
+        "latitude": 33.71913445951154,
+        "longitude": 73.06756893031796,
+        "address": "Attock Petrol Pump, 104 Jinnah Ave, G 7/3 Blue Area, Islamabad, Pakistan",
+        "city": "Islamabad",
+        "province_territory": "ICT",
+        "location_type": "City",
+        "power_kw": "150.00",
+        "cost_per_kwh": "110.00",
+        "phone_number": "",
+        "notes": "",
+        "is_available_24hrs": true,
+        "is_active": true,
+        "created_at": "2026-03-21T11:46:18.969Z",
+        "updated_at": "2026-03-21T11:46:18.970Z"
+    }
+]

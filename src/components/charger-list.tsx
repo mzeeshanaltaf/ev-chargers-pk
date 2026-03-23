@@ -12,6 +12,8 @@ interface ChargerListProps {
   totalCount: number;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
+  onEditCharger?: (charger: Charger) => void;
+  onDeleteCharger?: (charger: Charger) => void;
 }
 
 export function ChargerList({
@@ -21,6 +23,8 @@ export function ChargerList({
   totalCount,
   onClearFilters,
   hasActiveFilters,
+  onEditCharger,
+  onDeleteCharger,
 }: ChargerListProps) {
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -39,6 +43,8 @@ export function ChargerList({
               isSelected={selectedId === charger.id}
               onSelect={onSelectCharger}
               index={i}
+              onEdit={onEditCharger ? () => onEditCharger(charger) : undefined}
+              onDelete={onDeleteCharger ? () => onDeleteCharger(charger) : undefined}
             />
           ))
         )}

@@ -19,7 +19,31 @@ export function ActiveBadge({ isActive }: { isActive: boolean }) {
         : "bg-danger/15 text-danger"
     }`}>
       <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-brand" : "bg-danger"}`} />
-      {isActive ? "Active" : "Inactive"}
+      {isActive ? "Open" : "Closed"}
+    </span>
+  );
+}
+
+export function ChargerTypeBadge({ type }: { type: string }) {
+  const isDC = type === "DC";
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium ${
+      isDC ? "bg-brand/15 text-brand" : "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400"
+    }`}>
+      {isDC ? (
+        /* DC symbol: two horizontal lines */
+        <svg className="w-3 h-3 shrink-0" viewBox="0 0 12 8" fill="currentColor">
+          <rect x="0" y="1" width="12" height="1.5" rx="0.75" />
+          <rect x="0" y="5.5" width="5" height="1.5" rx="0.75" />
+          <rect x="7" y="5.5" width="5" height="1.5" rx="0.75" />
+        </svg>
+      ) : (
+        /* AC symbol: sine wave ~ */
+        <svg className="w-3 h-3 shrink-0" viewBox="0 0 12 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+          <path d="M1 4 C2 1.5 3 1.5 4 4 S6 6.5 7 4 S9 1.5 10 4" />
+        </svg>
+      )}
+      {type}
     </span>
   );
 }

@@ -37,9 +37,10 @@ export function FilterBar({
   if (filters.province) activeChips.push({ label: filters.province, onRemove: () => onUpdateFilter("province", null) });
   if (filters.city) activeChips.push({ label: filters.city, onRemove: () => onUpdateFilter("city", null) });
   if (filters.locationType) activeChips.push({ label: filters.locationType, onRemove: () => onUpdateFilter("locationType", null) });
+  if (filters.chargerType) activeChips.push({ label: filters.chargerType, onRemove: () => onUpdateFilter("chargerType", null) });
   if (filters.costRange) activeChips.push({ label: `PKR ${filters.costRange[0]}-${filters.costRange[1]}`, onRemove: () => onUpdateFilter("costRange", null) });
   if (filters.is24hrs !== null) activeChips.push({ label: filters.is24hrs ? "24hr Only" : "Not 24hr", onRemove: () => onUpdateFilter("is24hrs", null) });
-  if (filters.isActive !== null) activeChips.push({ label: filters.isActive ? "Active Only" : "Inactive Only", onRemove: () => onUpdateFilter("isActive", null) });
+  if (filters.isOpen !== null) activeChips.push({ label: filters.isOpen ? "Open Only" : "Closed Only", onRemove: () => onUpdateFilter("isOpen", null) });
   if (filters.minPower !== null) activeChips.push({ label: `${filters.minPower}+ kW`, onRemove: () => onUpdateFilter("minPower", null) });
 
   return (
@@ -93,6 +94,13 @@ export function FilterBar({
                 onChange={(v) => onUpdateFilter("locationType", v)}
                 placeholder="All Types"
               />
+              <SelectFilter
+                label="Charger Type"
+                value={filters.chargerType}
+                options={["AC", "DC"]}
+                onChange={(v) => onUpdateFilter("chargerType", v)}
+                placeholder="All Types"
+              />
               <RangeSlider
                 label="Cost (PKR/kWh)"
                 min={costBounds[0]}
@@ -106,9 +114,9 @@ export function FilterBar({
                 onChange={(v) => onUpdateFilter("is24hrs", v)}
               />
               <ToggleFilter
-                label="Active Status"
-                value={filters.isActive}
-                onChange={(v) => onUpdateFilter("isActive", v)}
+                label="Open Now"
+                value={filters.isOpen}
+                onChange={(v) => onUpdateFilter("isOpen", v)}
               />
 
               {hasActiveFilters && (
