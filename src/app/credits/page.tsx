@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LightningIcon } from "@/components/icons";
 import { PageFooter } from "@/components/page-footer";
 
-export default function AcknowledgementsPage() {
+export default function CreditsPage() {
   return (
     <div className="min-h-screen bg-surface">
       <header className="sticky top-0 z-50 h-14 flex items-center justify-between px-4 md:px-6 bg-surface/80 backdrop-blur-xl border-b border-border">
@@ -21,7 +21,7 @@ export default function AcknowledgementsPage() {
 
       <main className="max-w-2xl mx-auto px-6 py-12">
         <h1 className="text-3xl font-bold text-text-primary mb-4" style={{ fontFamily: "var(--font-heading)" }}>
-          Acknowledgements
+          Credits
         </h1>
         <p className="text-text-secondary mb-10 leading-relaxed">
           ChargeMap PK would not exist without the people who dedicate their time to growing Pakistan&apos;s EV community. We are deeply grateful to the following individuals and groups.

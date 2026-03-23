@@ -9,7 +9,7 @@ export function PageFooter() {
         <p>&copy; {year} ChargeMap PK. All rights reserved.</p>
         <nav className="flex items-center gap-4">
           <Link href="/about" className="hover:text-text-primary transition-colors">About</Link>
-          <Link href="/acknowledgements" className="hover:text-text-primary transition-colors">Acknowledgements</Link>
+          <Link href="/credits" className="hover:text-text-primary transition-colors">Credits</Link>
           <Link href="/terms" className="hover:text-text-primary transition-colors">Terms</Link>
           <Link href="/privacy" className="hover:text-text-primary transition-colors">Privacy</Link>
           <Link href="/contact" className="hover:text-text-primary transition-colors">Contact</Link>

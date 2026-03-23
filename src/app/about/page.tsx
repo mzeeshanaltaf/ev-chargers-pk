@@ -73,8 +73,8 @@ export default function AboutPage() {
               <Link href="/contact" className="text-brand hover:underline">
                 Get in touch with us
               </Link>. See our{" "}
-              <Link href="/acknowledgements" className="text-brand hover:underline">
-                Acknowledgements
+              <Link href="/credits" className="text-brand hover:underline">
+                Credits
               </Link>.
             </p>
           </div>

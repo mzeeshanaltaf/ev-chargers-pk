@@ -24,6 +24,7 @@ interface HeaderProps {
 
 const NAV_LINKS = [
   { href: "/about", label: "About" },
+  { href: "/credits", label: "Credits" },
   { href: "/terms", label: "Terms" },
   { href: "/privacy", label: "Privacy" },
   { href: "/contact", label: "Contact Us" },
