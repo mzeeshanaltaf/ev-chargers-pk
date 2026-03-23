@@ -67,6 +67,22 @@ export default function AboutPage() {
             Built with modern web technologies including Next.js, React, and Leaflet for an interactive mapping experience. The platform supports both light and dark themes, works across all devices, and provides real-time data about charging stations nationwide.
           </p>
 
+          <h2 className="text-xl font-semibold text-text-primary pt-4" style={{ fontFamily: "var(--font-heading)" }}>
+            Acknowledgements
+          </h2>
+          <ul className="list-disc list-inside space-y-2">
+            <li>
+              <span className="font-semibold text-text-primary">Fawad Hassan</span> — EV enthusiast &amp; EV Cars Community Admin, for maintaining the up-to-date list of EV chargers in Pakistan
+            </li>
+            <li>
+              All admin members of the{" "}
+              <a href="https://pakevs.com/about-us/#team" target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">
+                PAK EVs Community WhatsApp group
+              </a>{" "}
+              for providing the platform to share technical details, information, reviews, expert opinions, and technical advice related to EVs — thus supporting a cleaner, greener future for Pakistan
+            </li>
+          </ul>
+
           <div className="border-t border-border pt-8 mt-8">
             <p className="text-sm text-text-secondary">
               Have questions or suggestions?{" "}
