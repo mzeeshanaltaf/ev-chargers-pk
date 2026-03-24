@@ -8,42 +8,21 @@ interface ChargerPopupProps {
   charger: Charger;
 }
 
-function CopyMapsButton({ charger }: { charger: Charger }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    const url = `https://www.google.com/maps?q=${charger.latitude},${charger.longitude}`;
-    navigator.clipboard.writeText(url).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }).catch(() => {
-      const a = document.createElement("a");
-      a.href = url;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.click();
-    });
-  };
-
+function MapsButton({ charger }: { charger: Charger }) {
   return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      title={copied ? "Copied!" : "Copy Google Maps link"}
+    <a
+      href={`https://www.google.com/maps?q=${charger.latitude},${charger.longitude}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Open in Google Maps"
       className="flex items-center gap-1 px-2 py-0.5 rounded text-xs text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors"
     >
-      {copied ? (
-        <svg className="w-3 h-3 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="20 6 9 17 4 12" />
-        </svg>
-      ) : (
-        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-          <circle cx="12" cy="10" r="3" />
-        </svg>
-      )}
-      {copied ? "Copied!" : "Maps"}
-    </button>
+      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+        <circle cx="12" cy="10" r="3" />
+      </svg>
+      Maps
+    </a>
   );
 }
 
@@ -147,7 +126,7 @@ export function ChargerPopup({ charger }: ChargerPopupProps) {
         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
           {charger.location_type}
         </span>
-        <CopyMapsButton charger={charger} />
+        <MapsButton charger={charger} />
       </div>
 
       {/* Short ID — last */}
