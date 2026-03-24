@@ -80,10 +80,11 @@ export const CHARGER_TYPES = ["AC", "DC"] as const;
 export const LOCATION_TYPES = [
   "City",
   "Motorway",
+  "Off-Motorway",
   "Highway",
   "Mall",
   "Hotel",
-  "Residential",
+  "Dealership",
   "Other",
 ] as const;
 
