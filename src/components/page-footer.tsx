@@ -6,7 +6,7 @@ export function PageFooter() {
   return (
     <footer className="border-t border-border mt-16 py-8 px-6">
       <div className="max-w-2xl mx-auto flex flex-col items-center gap-3 text-sm text-text-secondary">
-        <p className="text-xs text-text-secondary/50">Developed with 💖 by Zeeshan Altaf</p>
+        <p className="text-xs text-text-secondary/50">Developed with 💖 by Zeeshan Altaf for PAK EVs Community</p>
         <div className="flex flex-col md:flex-row items-center justify-between w-full gap-3">
           <p>&copy; {year} ChargeMap PK. All rights reserved.</p>
           <nav className="flex items-center gap-4">
