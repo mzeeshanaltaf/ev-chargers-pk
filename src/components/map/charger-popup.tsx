@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import type { Charger } from "@/lib/types";
 import { formatPower, formatCost, formatPhone, formatDayHours } from "@/lib/format";
 
@@ -28,7 +27,6 @@ function MapsButton({ charger }: { charger: Charger }) {
 
 export function ChargerPopup({ charger }: ChargerPopupProps) {
   const oh = charger.opening_hours;
-  const [copiedId, setCopiedId] = useState(false);
   const shortId = charger.id.slice(-5).toUpperCase();
 
   return (
@@ -131,19 +129,15 @@ export function ChargerPopup({ charger }: ChargerPopupProps) {
 
       {/* Short ID — last */}
       <div className="flex justify-end mt-1">
-        <button
-          type="button"
-          onClick={() => {
-            navigator.clipboard.writeText(shortId).then(() => {
-              setCopiedId(true);
-              setTimeout(() => setCopiedId(false), 2000);
-            });
-          }}
-          title={charger.id}
-          className="text-xs font-mono text-gray-400 hover:text-green-600 transition-colors"
+        <a
+          href={`/${charger.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={`View full details — ${charger.id}`}
+          className="text-xs text-gray-400 hover:text-green-600 transition-colors hover:underline"
         >
-          {copiedId ? "Copied!" : `#${shortId}`}
-        </button>
+          View Full Details
+        </a>
       </div>
     </div>
   );

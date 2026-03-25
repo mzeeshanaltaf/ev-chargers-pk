@@ -17,6 +17,8 @@ export interface Charger {
   is_open: boolean;
   created_at: string;
   updated_at: string;
+  created_by_name?: string | null;
+  updated_by_name?: string | null;
   // Operating hours (present when is_available_24hrs = false)
   opening_hours?: {
     weekday?: { open: string; close: string; closed: boolean };
@@ -87,6 +89,20 @@ export const LOCATION_TYPES = [
   "Dealership",
   "Other",
 ] as const;
+
+export interface Comment {
+  id: number;
+  user_id: number;
+  charger_id?: string;
+  content: string;
+  parent_comment_id: number | null;
+  like_count: number;
+  dislike_count: number;
+  is_edited: boolean;
+  is_deleted: boolean;
+  created_at: string;
+  updated_at: string;
+}
 
 export interface AuthUser {
   id: string;

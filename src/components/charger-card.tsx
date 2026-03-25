@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import type { Charger } from "@/lib/types";
 import { formatPower, formatCost, formatDayHours, formatPhone } from "@/lib/format";
 import { Badge24hr, ActiveBadge, ChargerTypeBadge, LocationTypeBadge } from "@/components/badges";
@@ -37,7 +38,6 @@ interface ChargerCardProps {
 
 export function ChargerCard({ charger, isSelected, onSelect, index, onEdit, onDelete }: ChargerCardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [copiedId, setCopiedId] = useState(false);
   const shortId = charger.id.slice(-5).toUpperCase();
   const oh = charger.opening_hours;
 
@@ -196,20 +196,14 @@ export function ChargerCard({ charger, isSelected, onSelect, index, onEdit, onDe
       )}
 
       <div className="flex justify-end mt-2">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigator.clipboard.writeText(shortId).then(() => {
-              setCopiedId(true);
-              setTimeout(() => setCopiedId(false), 2000);
-            });
-          }}
-          title={charger.id}
-          className="text-xs font-mono text-text-secondary/40 hover:text-brand transition-colors"
+        <Link
+          href={`/${charger.id}`}
+          onClick={(e) => e.stopPropagation()}
+          title={`View full details — ${charger.id}`}
+          className="text-xs text-text-secondary/40 hover:text-brand transition-colors hover:underline underline-offset-2"
         >
-          {copiedId ? "Copied!" : `#${shortId}`}
-        </button>
+          View Full Details
+        </Link>
       </div>
     </motion.div>
   );

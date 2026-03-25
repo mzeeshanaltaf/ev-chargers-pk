@@ -46,10 +46,13 @@ export default function AboutPage() {
             <li>Filter chargers by province, city, charger type (AC/DC), power output, cost, location type, availability, and open status</li>
             <li>View real-time open/closed status based on each station&apos;s operating hours</li>
             <li>See detailed info per station — power, cost, peak-hour pricing, operating hours, phone number, and notes</li>
-            <li>Copy a Google Maps link for any charger directly from the card</li>
+            <li>Open any charger&apos;s location directly in Google Maps</li>
+            <li>View a dedicated details page for each charger with full info, record history, and community comments</li>
+            <li>Leave comments and like/dislike reactions on any charger (quick one-time name registration required)</li>
             <li>Use your current location to find nearby charging stations</li>
+            <li>Explore live stats — total chargers, DC/AC breakdown, 24-hour availability, and more on the Stats page</li>
             <li>Add new charging stations including AC/DC type, peak-hour pricing, and per-day operating hours (requires sign-in)</li>
-            <li>Edit or delete charging stations you have added (requires sign-in)</li>
+            <li>Edit charging stations you have added (requires sign-in)</li>
             <li>Right-click on the map to quickly place a new charger at any location (requires sign-in)</li>
           </ul>
 

@@ -14,9 +14,12 @@ An interactive map application for discovering and adding EV charging stations a
 - **My Location** — Geolocation button centers the map on the user's position with a blue dot
 - **Fit All** — One-click button zooms to show all chargers on screen
 - **Dark / Light Theme** — System-aware theme toggle with matching CartoDB map tiles
+- **Charger Detail Page** — Dedicated page per charger (`/<uuid>`) with full info, record metadata (added/updated by), and community comments
+- **Comments & Reactions** — Any visitor can register with a name + math captcha, leave comments, and like/dislike reactions with toggle support
+- **Stats Page** — Live statistics: total chargers, DC/AC split, 24-hour availability, currently open, and breakdowns by province and location type
 - **Authentication** — Sign in with email/password; only authorized users can add chargers
 - **Add Charger** — Form with embedded location picker map; supports click or right-click to drop a pin (authenticated users only)
-- **Static Pages** — About, Terms of Service, Privacy Policy, and Contact Us
+- **Static Pages** — About, Stats, Credits, Terms of Service, Privacy Policy, and Contact Us
 - **Contact Form** — Bot protection via honeypot field and math captcha challenge
 
 ## Tech Stack
@@ -71,10 +74,15 @@ src/
 │   ├── api/
 │   │   ├── auth/route.ts       # Proxy to n8n authenticate_user webhook
 │   │   ├── chargers/route.ts   # Proxy to n8n charger webhook
-│   │   └── contact/route.ts    # Proxy to n8n contact webhook
+│   │   ├── comments/route.ts   # Proxy to n8n get_comments / add_comment / add_comment_reaction
+│   │   ├── contact/route.ts    # Proxy to n8n contact webhook
+│   │   └── users/route.ts      # Proxy to n8n register_user webhook
+│   ├── [id]/page.tsx           # Charger detail page (dynamic route)
 │   ├── about/page.tsx
 │   ├── contact/page.tsx
+│   ├── credits/page.tsx
 │   ├── privacy/page.tsx
+│   ├── stats/page.tsx
 │   ├── terms/page.tsx
 │   ├── globals.css
 │   ├── layout.tsx
@@ -108,6 +116,9 @@ All requests are proxied through Next.js Route Handlers to keep the API key serv
 | `/api/chargers` | POST | `insert_ev_charger` |
 | `/api/auth` | POST | `authenticate_user` |
 | `/api/contact` | POST | Contact form submission |
+| `/api/comments` | GET | `get_comments` |
+| `/api/comments` | POST | `add_comment` / `add_comment_reaction` |
+| `/api/users` | POST | `register_user` |
 
 All requests to n8n include an `x-api-key` header for authentication.
 
