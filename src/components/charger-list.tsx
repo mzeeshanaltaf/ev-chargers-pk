@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import type { Charger } from "@/lib/types";
 import { ChargerCard } from "@/components/charger-card";
 import { ChargerCount } from "@/components/charger-count";
@@ -26,6 +27,14 @@ export function ChargerList({
   onEditCharger,
   onDeleteCharger,
 }: ChargerListProps) {
+  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  useEffect(() => {
+    if (selectedId && cardRefs.current[selectedId]) {
+      cardRefs.current[selectedId]!.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [selectedId]);
+
   return (
     <div className="flex flex-col flex-1 min-h-0">
       <ChargerCount filtered={chargers.length} total={totalCount} />
@@ -37,15 +46,16 @@ export function ChargerList({
           />
         ) : (
           chargers.map((charger, i) => (
-            <ChargerCard
-              key={charger.id}
-              charger={charger}
-              isSelected={selectedId === charger.id}
-              onSelect={onSelectCharger}
-              index={i}
-              onEdit={onEditCharger ? () => onEditCharger(charger) : undefined}
-              onDelete={onDeleteCharger ? () => onDeleteCharger(charger) : undefined}
-            />
+            <div key={charger.id} ref={(el) => { cardRefs.current[charger.id] = el; }}>
+              <ChargerCard
+                charger={charger}
+                isSelected={selectedId === charger.id}
+                onSelect={onSelectCharger}
+                index={i}
+                onEdit={onEditCharger ? () => onEditCharger(charger) : undefined}
+                onDelete={onDeleteCharger ? () => onDeleteCharger(charger) : undefined}
+              />
+            </div>
           ))
         )}
       </div>

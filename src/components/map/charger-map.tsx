@@ -17,9 +17,10 @@ interface ChargerMapProps {
   selectedCharger: Charger | null;
   onSelectCharger: (charger: Charger) => void;
   onMapRightClick?: (lat: number, lng: number) => void;
+  sidebarVisible: boolean;
 }
 
-export function ChargerMap({ chargers, selectedCharger, onSelectCharger, onMapRightClick }: ChargerMapProps) {
+export function ChargerMap({ chargers, selectedCharger, onSelectCharger, onMapRightClick, sidebarVisible }: ChargerMapProps) {
   return (
     <div className="w-full h-full relative">
       <MapInner
@@ -27,6 +28,7 @@ export function ChargerMap({ chargers, selectedCharger, onSelectCharger, onMapRi
         selectedCharger={selectedCharger}
         onSelectCharger={onSelectCharger}
         onMapRightClick={onMapRightClick}
+        sidebarVisible={sidebarVisible}
       />
     </div>
   );

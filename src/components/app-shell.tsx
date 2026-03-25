@@ -133,6 +133,7 @@ export function AppShell() {
             selectedCharger={selectedCharger}
             onSelectCharger={handleSelectCharger}
             onMapRightClick={handleMapRightClick}
+            sidebarVisible={sidebarVisible}
           />
         </div>
       </div>

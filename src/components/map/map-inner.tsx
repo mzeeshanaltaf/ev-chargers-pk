@@ -158,11 +158,20 @@ function MapClickHandler({ onMapRightClick }: { onMapRightClick?: (lat: number, 
   return null;
 }
 
+function SidebarResizeHandler({ sidebarVisible }: { sidebarVisible: boolean }) {
+  const map = useMap();
+  useEffect(() => {
+    map.invalidateSize();
+  }, [map, sidebarVisible]);
+  return null;
+}
+
 interface MapInnerProps {
   chargers: Charger[];
   selectedCharger: Charger | null;
   onSelectCharger: (charger: Charger) => void;
   onMapRightClick?: (lat: number, lng: number) => void;
+  sidebarVisible: boolean;
 }
 
 export default function MapInner({
@@ -170,6 +179,7 @@ export default function MapInner({
   selectedCharger,
   onSelectCharger,
   onMapRightClick,
+  sidebarVisible,
 }: MapInnerProps) {
   const activeIcon = useMemo(() => createMarkerIcon(true), []);
   const inactiveIcon = useMemo(() => createMarkerIcon(false), []);
@@ -189,6 +199,7 @@ export default function MapInner({
       <ThemeReactiveTileLayer />
       <FlyToHandler selectedCharger={selectedCharger} />
       <MapClickHandler onMapRightClick={onMapRightClick} />
+      <SidebarResizeHandler sidebarVisible={sidebarVisible} />
       <CustomControls chargers={chargers} />
 
       {chargers.map((charger) => (
