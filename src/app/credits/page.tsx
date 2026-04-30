@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LightningIcon } from "@/components/icons";
 import { PageFooter } from "@/components/page-footer";
+
+export const metadata: Metadata = {
+  title: "Credits",
+  description:
+    "ChargeMap PK acknowledges the EV enthusiasts and community members whose data and dedication made this platform possible.",
+  alternates: { canonical: "/credits" },
+};
 
 export default function CreditsPage() {
   return (

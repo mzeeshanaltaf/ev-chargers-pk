@@ -2,6 +2,7 @@
 
 import type { Charger } from "@/lib/types";
 import { formatPower, formatCost, formatPhone, formatDayHours } from "@/lib/format";
+import { chargerCanonicalPath } from "@/lib/slug";
 
 interface ChargerPopupProps {
   charger: Charger;
@@ -130,10 +131,10 @@ export function ChargerPopup({ charger }: ChargerPopupProps) {
       {/* Short ID — last */}
       <div className="flex justify-end mt-1">
         <a
-          href={`/${charger.id}`}
+          href={chargerCanonicalPath(charger)}
           target="_blank"
           rel="noopener noreferrer"
-          title={`View full details — ${charger.id}`}
+          aria-label={`View full details for ${charger.address}`}
           className="text-xs text-gray-400 hover:text-green-600 transition-colors hover:underline"
         >
           View Full Details

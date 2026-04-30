@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import type { Charger } from "@/lib/types";
+import { chargerCanonicalPath } from "@/lib/slug";
 import { formatPower, formatCost, formatDayHours, formatPhone } from "@/lib/format";
 import { Badge24hr, ActiveBadge, ChargerTypeBadge, LocationTypeBadge } from "@/components/badges";
 import { LightningIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
@@ -197,9 +198,9 @@ export function ChargerCard({ charger, isSelected, onSelect, index, onEdit, onDe
 
       <div className="flex justify-end mt-2">
         <Link
-          href={`/${charger.id}`}
+          href={chargerCanonicalPath(charger)}
           onClick={(e) => e.stopPropagation()}
-          title={`View full details — ${charger.id}`}
+          aria-label={`View full details for ${charger.address}`}
           className="text-xs text-text-secondary/40 hover:text-brand transition-colors hover:underline underline-offset-2"
         >
           View Full Details

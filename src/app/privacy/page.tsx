@@ -1,8 +1,14 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LightningIcon } from "@/components/icons";
 import { PageFooter } from "@/components/page-footer";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "ChargeMap PK privacy policy — how we collect, use, and protect your information on Pakistan's EV charging station directory.",
+  alternates: { canonical: "/privacy" },
+};
 
 export default function PrivacyPage() {
   return (

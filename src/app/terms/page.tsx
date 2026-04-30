@@ -1,8 +1,14 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LightningIcon } from "@/components/icons";
 import { PageFooter } from "@/components/page-footer";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description:
+    "ChargeMap PK terms of service — rules and guidelines for using Pakistan's community EV charging station directory.",
+  alternates: { canonical: "/terms" },
+};
 
 export default function TermsPage() {
   return (

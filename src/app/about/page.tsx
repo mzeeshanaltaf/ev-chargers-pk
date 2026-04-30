@@ -1,12 +1,64 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LightningIcon } from "@/components/icons";
 import { PageFooter } from "@/components/page-footer";
 
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Learn about ChargeMap PK — Pakistan's community-driven platform for discovering and sharing EV charging stations. Our mission, features, and the technology behind the map.",
+  alternates: { canonical: "/about" },
+};
+
+const FAQ_ITEMS = [
+  {
+    q: "How accurate is the charger data?",
+    a: "All charger data is contributed and verified by Pakistan's EV community. We display real-time open/closed status based on each station's configured operating hours. If you find an error, please use the Contact page to let us know.",
+  },
+  {
+    q: "Can I add a new charging station?",
+    a: "Yes — authorized contributors can add, edit, and update chargers directly on the map. Sign in with your account and use the Add Charger button. If you'd like contributor access, reach out to us via the Contact page.",
+  },
+  {
+    q: "Are the prices live or manually entered?",
+    a: "Prices are manually entered by contributors and may not reflect real-time changes. We recommend confirming pricing at the station before charging.",
+  },
+  {
+    q: "What is the difference between AC and DC charging?",
+    a: "AC (Alternating Current) chargers are slower and suitable for overnight or workplace charging. DC (Direct Current) fast chargers can charge most EVs to 80% in 20–60 minutes and are ideal for highway stops and quick top-ups.",
+  },
+  {
+    q: "Do I need to register to leave comments or reactions?",
+    a: "You don't need a full account — just enter your name and solve a simple math captcha on any charger's detail page. This one-time step enables commenting and liking/disliking reviews for that session.",
+  },
+  {
+    q: "Is there a mobile app?",
+    a: "ChargeMap PK is a Progressive Web App (PWA) — you can install it on your home screen from any modern browser on Android or iOS for an app-like experience without needing to visit an app store.",
+  },
+  {
+    q: "How do I report incorrect information?",
+    a: "Use the Contact page to report inaccurate data. If you are an authorized contributor, you can edit the charger directly on the map.",
+  },
+];
+
 export default function AboutPage() {
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_ITEMS.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
       <header className="sticky top-0 z-50 h-14 flex items-center justify-between px-4 md:px-6 bg-surface/80 backdrop-blur-xl border-b border-border">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
@@ -69,6 +121,27 @@ export default function AboutPage() {
           <p>
             Built with modern web technologies including Next.js, React, and Leaflet for an interactive mapping experience. The platform supports both light and dark themes, works across all devices, and provides real-time data about charging stations nationwide.
           </p>
+
+          <h2 className="text-xl font-semibold text-text-primary pt-4" style={{ fontFamily: "var(--font-heading)" }}>
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-3">
+            {FAQ_ITEMS.map(({ q, a }) => (
+              <details key={q} className="group border border-border rounded-lg overflow-hidden">
+                <summary className="flex items-center justify-between px-4 py-3 cursor-pointer text-sm font-medium text-text-primary select-none list-none">
+                  {q}
+                  <svg
+                    className="w-4 h-4 text-text-secondary shrink-0 transition-transform group-open:rotate-180"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                    strokeLinecap="round" strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </summary>
+                <p className="px-4 pb-4 pt-1 text-sm text-text-secondary leading-relaxed">{a}</p>
+              </details>
+            ))}
+          </div>
 
           <div className="border-t border-border pt-8 mt-8">
             <p className="text-sm text-text-secondary">
