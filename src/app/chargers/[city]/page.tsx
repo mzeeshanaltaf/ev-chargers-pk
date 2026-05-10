@@ -4,6 +4,7 @@ import { fetchChargers } from "@/lib/charger-fetch";
 import { citySlug, cityDisplayName, chargerCanonicalPath } from "@/lib/slug";
 import { formatPower, formatCost } from "@/lib/format";
 import { LightningIcon } from "@/components/icons";
+import { Header } from "@/components/header";
 import { PageFooter } from "@/components/page-footer";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ChargerTypeBadge, ActiveBadge } from "@/components/badges";
@@ -49,19 +50,7 @@ export default async function CityPage({
   if (cityChargers.length === 0) {
     return (
       <div className="min-h-screen bg-surface flex flex-col">
-        <header className="sticky top-0 z-50 h-14 flex items-center justify-between px-4 md:px-6 bg-surface/80 backdrop-blur-xl border-b border-border">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
-              <LightningIcon className="w-4.5 h-4.5 text-white" fill="currentColor" />
-            </div>
-            <span className="text-lg font-bold tracking-tight text-text-primary" style={{ fontFamily: "var(--font-heading)" }}>
-              ChargeMap<span className="text-brand ml-0.5">PK</span>
-            </span>
-          </Link>
-          <Link href="/" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
-            &larr; Back to Map
-          </Link>
-        </header>
+        <Header />
         <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
           <div className="w-16 h-16 rounded-2xl bg-surface-raised border border-border flex items-center justify-center mb-6">
             <LightningIcon className="w-8 h-8 text-text-secondary/40" fill="currentColor" />
@@ -108,19 +97,7 @@ export default async function CityPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
 
-      <header className="sticky top-0 z-50 h-14 flex items-center justify-between px-4 md:px-6 bg-surface/80 backdrop-blur-xl border-b border-border">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
-            <LightningIcon className="w-4.5 h-4.5 text-white" fill="currentColor" />
-          </div>
-          <span className="text-lg font-bold tracking-tight text-text-primary" style={{ fontFamily: "var(--font-heading)" }}>
-            ChargeMap<span className="text-brand ml-0.5">PK</span>
-          </span>
-        </Link>
-        <Link href="/" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
-          &larr; Back to Map
-        </Link>
-      </header>
+      <Header />
 
       <main className="max-w-2xl mx-auto px-6 py-10">
         <Breadcrumbs items={[

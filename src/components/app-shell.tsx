@@ -197,6 +197,22 @@ export function AppShell() {
         )}
       </div>
 
+      {/* Attribution badge — bottom-left, shifts right of sidebar on desktop */}
+      <div className="fixed bottom-4 left-4 md:left-104 z-40 pointer-events-none">
+        <p className="text-[11px] text-text-secondary/80 bg-surface/80 backdrop-blur-sm rounded-full px-3 py-1 border border-border shadow-sm">
+          Developed with 💖 by{" "}
+          <a
+            href="https://www.zeeshanai.cloud"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline pointer-events-auto hover:text-text-primary transition-colors"
+          >
+            Zeeshan Altaf
+          </a>
+          {" "}for PAK EVs Community
+        </p>
+      </div>
+
       {isAuthenticated && <AddChargerButton onClick={handleOpenAddModal} />}
 
       <AddChargerModal
