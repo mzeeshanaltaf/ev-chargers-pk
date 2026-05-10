@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { fetchChargers } from "@/lib/charger-fetch";
 import { citySlug, cityDisplayName, chargerCanonicalPath } from "@/lib/slug";
 import { formatPower, formatCost } from "@/lib/format";
@@ -47,7 +46,43 @@ export default async function CityPage({
   const chargers = await fetchChargers();
   const cityChargers = chargers.filter((c) => citySlug(c) === city);
 
-  if (cityChargers.length === 0) notFound();
+  if (cityChargers.length === 0) {
+    return (
+      <div className="min-h-screen bg-surface flex flex-col">
+        <header className="sticky top-0 z-50 h-14 flex items-center justify-between px-4 md:px-6 bg-surface/80 backdrop-blur-xl border-b border-border">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
+              <LightningIcon className="w-4.5 h-4.5 text-white" fill="currentColor" />
+            </div>
+            <span className="text-lg font-bold tracking-tight text-text-primary" style={{ fontFamily: "var(--font-heading)" }}>
+              ChargeMap<span className="text-brand ml-0.5">PK</span>
+            </span>
+          </Link>
+          <Link href="/" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+            &larr; Back to Map
+          </Link>
+        </header>
+        <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-surface-raised border border-border flex items-center justify-center mb-6">
+            <LightningIcon className="w-8 h-8 text-text-secondary/40" fill="currentColor" />
+          </div>
+          <h1 className="text-2xl font-bold text-text-primary mb-3" style={{ fontFamily: "var(--font-heading)" }}>
+            No Chargers Found in {name}
+          </h1>
+          <p className="text-text-secondary max-w-sm leading-relaxed mb-8">
+            We don&apos;t have any EV charging stations listed for {name} yet. Check back later or explore chargers in other cities.
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand text-white px-5 py-2.5 text-sm font-semibold hover:bg-brand/90 transition-colors"
+          >
+            &larr; Browse All Chargers
+          </Link>
+        </main>
+        <PageFooter />
+      </div>
+    );
+  }
 
   const dc = cityChargers.filter((c) => c.charger_type === "DC").length;
   const ac = cityChargers.filter((c) => c.charger_type === "AC").length;

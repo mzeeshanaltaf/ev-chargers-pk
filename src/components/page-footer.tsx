@@ -35,7 +35,18 @@ export function PageFooter() {
         </div>
 
         <div className="border-t border-border pt-4 flex flex-col items-center gap-3">
-          <p className="text-xs text-text-secondary/50">Developed with 💖 by Zeeshan Altaf for PAK EVs Community</p>
+          <p className="text-xs text-text-secondary/50">
+            Developed with 💖 by{" "}
+            <a
+              href="https://www.zeeshanai.cloud"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-text-primary transition-colors"
+            >
+              Zeeshan Altaf
+            </a>
+            {" "}for PAK EVs Community
+          </p>
           <div className="flex flex-col md:flex-row items-center justify-between w-full gap-3">
             <p>&copy; {year} ChargeMap PK. All rights reserved.</p>
             <nav className="flex items-center gap-4">
