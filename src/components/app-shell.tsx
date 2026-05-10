@@ -198,7 +198,7 @@ export function AppShell() {
       </div>
 
       {/* Attribution badge — bottom-left, shifts right of sidebar on desktop */}
-      <div className="fixed bottom-4 left-4 md:left-104 z-40 pointer-events-none">
+      <div className="fixed bottom-16 left-4 md:bottom-4 md:left-104 z-40 pointer-events-none">
         <p className="text-[11px] text-text-secondary/80 bg-surface/80 backdrop-blur-sm rounded-full px-3 py-1 border border-border shadow-sm">
           Developed with 💖 by{" "}
           <a
