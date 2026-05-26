@@ -6,6 +6,7 @@ import { chargerCanonicalPath, citySlug, cityDisplayName } from "@/lib/slug";
 import { formatPower, formatCost, formatDayHours } from "@/lib/format";
 import { Badge24hr, ActiveBadge, ChargerTypeBadge, LocationTypeBadge } from "@/components/badges";
 import { LightningIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
+import { InfoTip } from "@/components/info-tip";
 import { Header } from "@/components/header";
 import { PageFooter } from "@/components/page-footer";
 import { Breadcrumbs } from "@/components/breadcrumbs";
@@ -141,12 +142,14 @@ export default async function ChargerDetailPage({
           )}
 
           <div className="flex flex-col gap-1">
-            <span className="text-lg font-semibold text-brand tabular-nums" style={{ fontFamily: "var(--font-heading)" }}>
+            <span className="inline-flex items-center gap-1.5 text-lg font-semibold text-brand tabular-nums" style={{ fontFamily: "var(--font-heading)" }}>
               {formatCost(charger.cost_per_kwh)}/kWh
+              <InfoTip />
             </span>
             {charger.cost_per_kwh_peak != null && (
-              <span className="text-sm font-semibold text-amber-500 tabular-nums">
+              <span className="inline-flex items-center gap-1 text-sm font-semibold text-amber-500 tabular-nums">
                 {formatCost(charger.cost_per_kwh_peak)}/kWh (Peak hours)
+                <InfoTip />
               </span>
             )}
           </div>

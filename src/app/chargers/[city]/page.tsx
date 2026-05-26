@@ -4,6 +4,7 @@ import { fetchChargers } from "@/lib/charger-fetch";
 import { citySlug, cityDisplayName, chargerCanonicalPath } from "@/lib/slug";
 import { formatPower, formatCost } from "@/lib/format";
 import { LightningIcon } from "@/components/icons";
+import { InfoTip } from "@/components/info-tip";
 import { Header } from "@/components/header";
 import { PageFooter } from "@/components/page-footer";
 import { Breadcrumbs } from "@/components/breadcrumbs";
@@ -147,7 +148,10 @@ export default async function CityPage({
                     <ActiveBadge isActive={charger.is_open} />
                   </div>
                   <p className="text-sm text-text-secondary truncate">{charger.address}</p>
-                  <p className="text-xs text-brand font-semibold mt-1">{formatCost(charger.cost_per_kwh)}/kWh</p>
+                  <p className="inline-flex items-center gap-1 text-xs text-brand font-semibold mt-1">
+                    {formatCost(charger.cost_per_kwh)}/kWh
+                    <InfoTip />
+                  </p>
                 </div>
                 <svg className="w-4 h-4 text-text-secondary/40 shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="9 18 15 12 9 6" />

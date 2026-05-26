@@ -3,6 +3,7 @@
 import type { Charger } from "@/lib/types";
 import { formatPower, formatCost, formatPhone, formatDayHours } from "@/lib/format";
 import { chargerCanonicalPath } from "@/lib/slug";
+import { InfoTip } from "@/components/info-tip";
 
 interface ChargerPopupProps {
   charger: Charger;
@@ -81,9 +82,15 @@ export function ChargerPopup({ charger }: ChargerPopupProps) {
 
       {/* Cost */}
       <div className="flex flex-col gap-0.5 mb-1">
-        <span className="text-xs font-semibold text-green-600">{formatCost(charger.cost_per_kwh)}/kWh</span>
+        <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-600">
+          {formatCost(charger.cost_per_kwh)}/kWh
+          <InfoTip />
+        </span>
         {charger.cost_per_kwh_peak != null && (
-          <span className="text-xs font-semibold text-amber-500">{formatCost(charger.cost_per_kwh_peak)}/kWh (Peak hours)</span>
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-500">
+            {formatCost(charger.cost_per_kwh_peak)}/kWh (Peak hours)
+            <InfoTip />
+          </span>
         )}
       </div>
 

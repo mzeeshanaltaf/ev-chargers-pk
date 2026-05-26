@@ -8,6 +8,7 @@ import { chargerCanonicalPath } from "@/lib/slug";
 import { formatPower, formatCost, formatDayHours, formatPhone } from "@/lib/format";
 import { Badge24hr, ActiveBadge, ChargerTypeBadge, LocationTypeBadge } from "@/components/badges";
 import { LightningIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
+import { InfoTip } from "@/components/info-tip";
 
 function MapsButton({ charger }: { charger: Charger }) {
   return (
@@ -168,12 +169,14 @@ export function ChargerCard({ charger, isSelected, onSelect, index, onEdit, onDe
 
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-0.5">
-          <span className="text-sm font-semibold text-brand tabular-nums" style={{ fontFamily: "var(--font-heading)" }}>
+          <span className="inline-flex items-center gap-1 text-sm font-semibold text-brand tabular-nums" style={{ fontFamily: "var(--font-heading)" }}>
             {formatCost(charger.cost_per_kwh)}/kWh
+            <InfoTip />
           </span>
           {charger.cost_per_kwh_peak != null && (
-            <span className="text-xs font-semibold text-amber-500 tabular-nums">
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-500 tabular-nums">
               {formatCost(charger.cost_per_kwh_peak)}/kWh (Peak hours)
+              <InfoTip />
             </span>
           )}
         </div>

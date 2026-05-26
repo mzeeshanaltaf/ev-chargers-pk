@@ -9,6 +9,7 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { LocationPicker } from "@/components/add-charger/location-picker";
 import { useAuth } from "@/components/auth-provider";
+import { InfoTip } from "@/components/info-tip";
 
 interface ChargerFormProps {
   initialLat?: string;
@@ -281,7 +282,12 @@ export function ChargerForm({ initialLat, initialLng, initialAddress, initialDat
           min="1"
         />
         <Input
-          label="Cost (PKR/kWh)"
+          label={
+            <span className="inline-flex items-center gap-1">
+              Cost (PKR/kWh)
+              <InfoTip />
+            </span>
+          }
           type="number"
           value={formData.cost_per_kw}
           onChange={(e) => updateField("cost_per_kw", e.target.value)}
@@ -302,7 +308,12 @@ export function ChargerForm({ initialLat, initialLng, initialAddress, initialDat
         </div>
         {peakPricingEnabled && (
           <Input
-            label="Peak Cost (PKR/kWh)"
+            label={
+              <span className="inline-flex items-center gap-1">
+                Peak Cost (PKR/kWh)
+                <InfoTip />
+              </span>
+            }
             type="number"
             value={formData.cost_per_kwh_peak}
             onChange={(e) => updateField("cost_per_kwh_peak", e.target.value)}
