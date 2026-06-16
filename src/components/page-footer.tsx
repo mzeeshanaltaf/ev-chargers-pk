@@ -51,13 +51,15 @@ export function PageFooter() {
           </div>
           <div className="flex flex-col md:flex-row items-center justify-between w-full gap-3">
             <p>&copy; {year} ChargeMap PK. All rights reserved.</p>
-            <nav className="flex items-center gap-4">
-              <Link href="/about" className="hover:text-text-primary transition-colors">About</Link>
-              <Link href="/stats" className="hover:text-text-primary transition-colors">Stats</Link>
-              <Link href="/credits" className="hover:text-text-primary transition-colors">Credits</Link>
+            <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+              <Link href="/map" className="hover:text-text-primary transition-colors">Map</Link>
+              <Link href="/#cities" className="hover:text-text-primary transition-colors">Cities</Link>
+              <Link href="/#how" className="hover:text-text-primary transition-colors">How it works</Link>
+              <Link href="/#about" className="hover:text-text-primary transition-colors">About</Link>
+              <Link href="/#stats" className="hover:text-text-primary transition-colors">Stats</Link>
+              <Link href="/contact" className="hover:text-text-primary transition-colors">Contact</Link>
               <Link href="/terms" className="hover:text-text-primary transition-colors">Terms</Link>
               <Link href="/privacy" className="hover:text-text-primary transition-colors">Privacy</Link>
-              <Link href="/contact" className="hover:text-text-primary transition-colors">Contact</Link>
             </nav>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { InfoShell } from "@/components/landing/info-shell";
 import { StatsClient } from "./stats-client";
 
 export const metadata: Metadata = {
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function StatsPage() {
-  return <StatsClient />;
+  return (
+    <InfoShell>
+      <StatsClient />
+    </InfoShell>
+  );
 }

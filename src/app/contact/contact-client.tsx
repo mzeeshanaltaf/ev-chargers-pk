@@ -1,17 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { Header } from "@/components/header";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { PageFooter } from "@/components/page-footer";
 
 interface ContactErrors {
   name?: string;
   email?: string;
   description?: string;
-  captcha?: string;
   _form?: string;
 }
 
@@ -32,17 +27,31 @@ function validateContact(data: { name: string; email: string; description: strin
   return errors;
 }
 
-function generateChallenge() {
-  const a = Math.floor(Math.random() * 10) + 1;
-  const b = Math.floor(Math.random() * 10) + 1;
-  return { a, b, answer: a + b };
+// Shared field styling on the landing palette. Error states use the (dark-resolved)
+// app danger token since the landing palette has no dedicated danger color.
+const fieldClass =
+  "w-full px-3 py-2 rounded-lg text-sm transition-all focus:outline-none focus:ring-2 focus:ring-(--ld-green-bright)";
+function fieldStyle(hasError?: boolean): React.CSSProperties {
+  return {
+    background: "var(--ld-surface)",
+    border: `1px solid ${hasError ? "var(--theme-danger)" : "var(--ld-border)"}`,
+    color: "var(--ld-text)",
+  };
+}
+const labelClass = "text-sm font-medium";
+const labelStyle = { color: "var(--ld-text-muted)" } as const;
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return <label className={labelClass} style={labelStyle}>{children}</label>;
+}
+
+function ErrorText({ children }: { children: React.ReactNode }) {
+  return <p className="text-xs" style={{ color: "var(--theme-danger)" }}>{children}</p>;
 }
 
 export function ContactClient() {
   const [formData, setFormData] = useState({ name: "", email: "", description: "" });
-  const [captchaInput, setCaptchaInput] = useState("");
   const [honeypot, setHoneypot] = useState("");
-  const [challenge] = useMemo(() => [generateChallenge()], []);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -61,10 +70,6 @@ export function ContactClient() {
     if (honeypot) return;
 
     const validationErrors = validateContact(formData);
-    if (!captchaInput.trim()) validationErrors.captcha = "Please answer the math question";
-    else if (parseInt(captchaInput.trim(), 10) !== challenge.answer)
-      validationErrors.captcha = "Incorrect answer, please try again";
-
     if (Object.keys(validationErrors).length > 0) { setErrors(validationErrors); return; }
 
     setIsSubmitting(true);
@@ -76,8 +81,13 @@ export function ContactClient() {
           name: formData.name.trim(),
           email: formData.email.trim(),
           description: formData.description.trim(),
+          website: honeypot,
         }),
       });
+      if (res.status === 429) {
+        setErrors({ _form: "You've sent a few messages already — please try again later." });
+        return;
+      }
       if (!res.ok) throw new Error("Failed to send");
       setIsSubmitted(true);
     } catch {
@@ -88,83 +98,104 @@ export function ContactClient() {
   };
 
   return (
-    <div className="min-h-screen bg-surface">
-      <Header />
+    <div className="max-w-xl mx-auto">
+      <h1 className="ld-display text-[clamp(2.2rem,5vw,3.2rem)] font-bold mb-2" style={{ color: "var(--ld-text)" }}>
+        Contact Us
+      </h1>
+      <p className="mb-8 text-[16px]" style={{ color: "var(--ld-text-muted)" }}>
+        Found a bug, want to add a new charger or update an existing one&apos;s details, or just
+        want to say hi? We&apos;d love to hear from you.
+      </p>
 
-      <main className="max-w-xl mx-auto px-6 py-12">
-        <h1 className="text-3xl font-bold text-text-primary mb-2" style={{ fontFamily: "var(--font-heading)" }}>
-          Contact Us
-        </h1>
-        <p className="text-text-secondary mb-8">
-          Have a bug to report, a feature to request, or just want to say hi? We&apos;d love to hear from you.
-        </p>
-
-        {isSubmitted ? (
-          <div className="rounded-xl border border-brand/30 bg-brand/5 p-8 text-center">
-            <div className="w-12 h-12 rounded-full bg-brand/15 flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold text-text-primary mb-2" style={{ fontFamily: "var(--font-heading)" }}>
-              Message Sent!
-            </h2>
-            <p className="text-text-secondary mb-6">
-              Thank you for reaching out. We&apos;ll get back to you as soon as possible.
-            </p>
-            <Link href="/" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand text-white font-medium text-sm hover:brightness-110 transition-all">
-              Back to Map
-            </Link>
+      {isSubmitted ? (
+        <div
+          className="rounded-xl p-8 text-center"
+          style={{ background: "color-mix(in oklch, var(--ld-green) 8%, transparent)", border: "1px solid var(--ld-border-strong)" }}
+        >
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
+            style={{ background: "color-mix(in oklch, var(--ld-green) 16%, transparent)", color: "var(--ld-green-bright)" }}
+          >
+            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <Input label="Name" value={formData.name} onChange={(e) => updateField("name", e.target.value)} error={errors.name} placeholder="Your name" maxLength={100} />
-            <Input label="Email" type="email" value={formData.email} onChange={(e) => updateField("email", e.target.value)} error={errors.email} placeholder="you@example.com" />
+          <h2 className="ld-display text-xl font-semibold mb-2" style={{ color: "var(--ld-text)" }}>
+            Message Sent!
+          </h2>
+          <p className="mb-6" style={{ color: "var(--ld-text-muted)" }}>
+            Thank you for reaching out. We&apos;ll get back to you as soon as possible.
+          </p>
+          <Link
+            href="/map"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm transition-transform hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-(--ld-green-bright)"
+            style={{ background: "var(--ld-green)", color: "var(--ld-on-green)", boxShadow: "0 0 24px var(--ld-glow)" }}
+          >
+            Back to Map
+          </Link>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="flex flex-col gap-1.5">
+            <FieldLabel>Name</FieldLabel>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => updateField("name", e.target.value)}
+              maxLength={100}
+              className={fieldClass}
+              style={fieldStyle(!!errors.name)}
+              placeholder="Your name"
+            />
+            {errors.name && <ErrorText>{errors.name}</ErrorText>}
+          </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-text-secondary">Message</label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => updateField("description", e.target.value)}
-                rows={5}
-                maxLength={2000}
-                className={`w-full px-3 py-2 rounded-lg bg-surface border border-border text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent text-sm resize-none transition-all ${errors.description ? "border-danger focus:ring-danger" : ""}`}
-                placeholder="Tell us what's on your mind — report a bug, suggest a feature, or just say hi..."
-              />
-              <div className="flex justify-between">
-                {errors.description ? <p className="text-xs text-danger">{errors.description}</p> : <span />}
-                <span className="text-xs text-text-secondary tabular-nums">{formData.description.length}/2000</span>
-              </div>
+          <div className="flex flex-col gap-1.5">
+            <FieldLabel>Email</FieldLabel>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => updateField("email", e.target.value)}
+              className={fieldClass}
+              style={fieldStyle(!!errors.email)}
+              placeholder="you@example.com"
+            />
+            {errors.email && <ErrorText>{errors.email}</ErrorText>}
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <FieldLabel>Message</FieldLabel>
+            <textarea
+              value={formData.description}
+              onChange={(e) => updateField("description", e.target.value)}
+              rows={5}
+              maxLength={2000}
+              className={`${fieldClass} resize-none`}
+              style={fieldStyle(!!errors.description)}
+              placeholder="Tell us what's on your mind — add a new charger, correct a charger's details, report a bug, or just say hi..."
+            />
+            <div className="flex justify-between">
+              {errors.description ? <ErrorText>{errors.description}</ErrorText> : <span />}
+              <span className="text-xs tabular-nums" style={{ color: "var(--ld-text-dim)" }}>{formData.description.length}/2000</span>
             </div>
+          </div>
 
-            <div className="absolute opacity-0 -z-10 h-0 overflow-hidden" aria-hidden="true">
-              <input type="text" name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
-            </div>
+          <div className="absolute opacity-0 -z-10 h-0 overflow-hidden" aria-hidden="true">
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+          </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-text-secondary">
-                What is {challenge.a} + {challenge.b}?
-              </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={captchaInput}
-                onChange={(e) => { setCaptchaInput(e.target.value); setErrors((prev) => { const next = { ...prev }; delete next.captcha; return next; }); }}
-                className={`w-full px-3 py-2 rounded-lg bg-surface border border-border text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent text-sm transition-all ${errors.captcha ? "border-danger focus:ring-danger" : ""}`}
-                placeholder="Your answer"
-              />
-              {errors.captcha && <p className="text-xs text-danger">{errors.captcha}</p>}
-            </div>
+          {errors._form && <p className="text-sm text-center" style={{ color: "var(--theme-danger)" }}>{errors._form}</p>}
 
-            {errors._form && <p className="text-sm text-danger text-center">{errors._form}</p>}
-
-            <Button type="submit" variant="primary" size="lg" isLoading={isSubmitting} className="w-full">
-              Send Message
-            </Button>
-          </form>
-        )}
-      </main>
-      <PageFooter />
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-(--ld-green-bright) disabled:opacity-60 disabled:hover:scale-100"
+            style={{ background: "var(--ld-green)", color: "var(--ld-on-green)", boxShadow: "0 0 24px var(--ld-glow)" }}
+          >
+            {isSubmitting ? "Sending…" : "Send Message"}
+          </button>
+        </form>
+      )}
     </div>
   );
 }

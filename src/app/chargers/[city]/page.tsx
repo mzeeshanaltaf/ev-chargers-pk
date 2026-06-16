@@ -63,7 +63,7 @@ export default async function CityPage({
             We don&apos;t have any EV charging stations listed for {name} yet. Check back later or explore chargers in other cities.
           </p>
           <Link
-            href="/"
+            href="/map"
             className="inline-flex items-center gap-2 rounded-xl bg-brand text-white px-5 py-2.5 text-sm font-semibold hover:bg-brand/90 transition-colors"
           >
             &larr; Browse All Chargers

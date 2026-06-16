@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Space_Grotesk } from "next/font/google";
+import { DM_Sans, Space_Grotesk, Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
@@ -12,6 +12,20 @@ const dmSans = DM_Sans({
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-heading",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Marketing-only typography. Scoped to the landing page via dedicated
+// variables so the app UI keeps DM Sans / Space Grotesk untouched.
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-landing-display",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const hanken = Hanken_Grotesk({
+  variable: "--font-landing-body",
   subsets: ["latin"],
   display: "swap",
 });
@@ -91,7 +105,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${spaceGrotesk.variable}`}
+      className={`${dmSans.variable} ${spaceGrotesk.variable} ${bricolage.variable} ${hanken.variable}`}
       suppressHydrationWarning
     >
       <body>

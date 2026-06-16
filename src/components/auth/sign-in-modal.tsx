@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -51,6 +52,19 @@ export function SignInModal({ isOpen, onClose }: SignInModalProps) {
         <p className="text-sm text-text-secondary">
           Sign in to add new EV charging stations to the map.
         </p>
+
+        <div className="px-3 py-2.5 rounded-lg bg-surface-raised border border-border text-sm text-text-secondary">
+          <span className="font-medium text-text-primary">Admin access required</span> to add or
+          edit EV charging stations. Want a charger added or updated?{" "}
+          <Link
+            href="/contact"
+            onClick={onClose}
+            className="text-brand underline hover:text-brand/80 transition-colors"
+          >
+            Contact us
+          </Link>
+          .
+        </div>
 
         <Input
           label="Email"

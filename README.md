@@ -1,11 +1,12 @@
 # ChargeMap PK — EV Chargers in Pakistan
 
-An interactive map application for discovering and adding EV charging stations across Pakistan. Built with Next.js 16, Leaflet, and Tailwind CSS.
+A community-driven directory for discovering and adding EV charging stations across Pakistan: a marketing landing page at `/` plus an interactive map app at `/map`. Built with Next.js 16, Leaflet, and Tailwind CSS.
 
 ![ChargeMap PK](public/favicon.png)
 
 ## Features
 
+- **Marketing Landing** — Dedicated landing page at `/` with live stats, feature highlights, popular cities, and clear paths into the app (the interactive map lives at `/map`)
 - **Interactive Map** — Full-screen Leaflet map of Pakistan with bounded navigation
 - **Charger Markers** — Green (active) and gray (inactive) pins with hover popups and click-to-select
 - **Sidebar List** — Scrollable card list synced with the map; clicking a card flies to that charger
@@ -14,7 +15,7 @@ An interactive map application for discovering and adding EV charging stations a
 - **My Location** — Geolocation button centers the map on the user's position with a blue dot
 - **Fit All** — One-click button zooms to show all chargers on screen
 - **Dark / Light Theme** — System-aware theme toggle with matching CartoDB map tiles
-- **Charger Detail Page** — Dedicated page per charger (`/<uuid>`) with full info, record metadata (added/updated by), and community comments
+- **City & Charger Pages** — SEO-friendly city lists (`/chargers/[city]`) and per-charger detail pages (`/chargers/[city]/[slug]`) with full info, record metadata (added/updated by), `EVChargingStation` JSON-LD, and community comments
 - **Comments & Reactions** — Any visitor can register with a name + math captcha, leave comments, and like/dislike reactions with toggle support
 - **Stats Page** — Live statistics: total chargers, DC/AC split, 24-hour availability, currently open, and breakdowns by province and location type
 - **Authentication** — Sign in with email/password; only authorized users can add chargers
@@ -31,7 +32,7 @@ An interactive map application for discovering and adding EV charging stations a
 | Map | Leaflet + react-leaflet v5 |
 | Data Fetching | SWR (client-side, localStorage-persisted cache) |
 | Animations | Framer Motion |
-| Fonts | DM Sans (body) + Space Grotesk (headings) |
+| Fonts | App: DM Sans (body) + Space Grotesk (headings); Landing: Hanken Grotesk + Bricolage Grotesque |
 | Map Tiles | CartoDB Positron (light) / Dark All (dark) |
 
 ## Getting Started
@@ -77,34 +78,39 @@ src/
 │   │   ├── comments/route.ts   # Proxy to n8n get_comments / add_comment / add_comment_reaction
 │   │   ├── contact/route.ts    # Proxy to n8n contact webhook
 │   │   └── users/route.ts      # Proxy to n8n register_user webhook
-│   ├── [id]/page.tsx           # Charger detail page (dynamic route)
-│   ├── about/page.tsx
-│   ├── contact/page.tsx
-│   ├── credits/page.tsx
-│   ├── privacy/page.tsx
-│   ├── stats/page.tsx
-│   ├── terms/page.tsx
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
+│   ├── page.tsx                # Marketing landing page (server component)
+│   ├── map/page.tsx            # Interactive map app (AppShell)
+│   ├── chargers/[city]/        # City list + [slug] detail page (+ OG image)
+│   ├── [id]/page.tsx           # Legacy redirect to canonical charger path
+│   ├── about/ contact/ credits/ privacy/ stats/ terms/   # Info pages
+│   ├── sitemap.ts robots.ts manifest.ts opengraph-image.tsx
+│   ├── globals.css             # Theme tokens (app) + landing (.landing-root)
+│   └── layout.tsx              # Fonts + global metadata + JSON-LD
 ├── components/
 │   ├── add-charger/            # Add charger modal + form + location picker
+│   ├── edit-charger/           # Edit charger modal
 │   ├── auth/                   # Sign-in modal
 │   ├── filters/                # Filter bar, dropdowns, range slider, toggles
 │   ├── map/                    # Leaflet map wrapper, markers, popups
+│   ├── landing/                # Landing page sections (hero, stats, features…)
 │   ├── ui/                     # Shared UI (button, input, modal, toast)
 │   ├── auth-provider.tsx       # Auth context + localStorage persistence
 │   └── ...                     # Header, app shell, charger cards, etc.
 ├── hooks/
-│   ├── use-chargers.ts         # SWR data hook with optimistic add
+│   ├── use-chargers.ts         # SWR data hook with optimistic add/edit/delete
 │   ├── use-filters.ts          # Filter state + filterChargers()
 │   └── use-toast.ts
 └── lib/
+    ├── charger-fetch.ts        # Server-side fetchChargers() (cached)
+    ├── slug.ts                 # Canonical city/charger paths + slugs
     ├── map-constants.ts        # Pakistan bounds, zoom levels, tile URLs
     ├── types.ts
     ├── format.ts
     └── validate.ts
 ```
+
+Strategic and visual design context for the project lives in `PRODUCT.md` and
+`DESIGN.md` at the repo root; agent/contributor guidance lives in `CLAUDE.md`.
 
 ## API Integration
 

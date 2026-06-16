@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "ChargeMap PK",
     description:
       "Pakistan's community-driven EV charging station directory — find, add, and share charging stations nationwide.",
-    start_url: "/",
+    start_url: "/map",
     display: "standalone",
     background_color: "#ffffff",
     theme_color: "#00C853",

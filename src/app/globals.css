@@ -169,3 +169,64 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* =========================================================================
+   Landing page (marketing surface) — dark, committed-green theme.
+   Scoped under .landing-root so none of these tokens leak into the app UI.
+   ========================================================================= */
+.landing-root {
+  /* Near-black base, tinted toward the brand green hue (never pure #000). */
+  --ld-bg: oklch(0.155 0.012 158);
+  --ld-bg-deep: oklch(0.12 0.011 158);
+  --ld-surface: oklch(0.2 0.013 158);
+  --ld-surface-2: oklch(0.245 0.015 158);
+  --ld-border: oklch(0.3 0.016 158);
+  --ld-border-strong: oklch(0.4 0.02 158);
+
+  --ld-text: oklch(0.96 0.006 158);
+  --ld-text-muted: oklch(0.74 0.013 158);
+  --ld-text-dim: oklch(0.58 0.013 158);
+
+  /* Load-bearing green. */
+  --ld-green: oklch(0.78 0.2 152);
+  --ld-green-bright: oklch(0.87 0.18 155);
+  --ld-green-deep: oklch(0.42 0.12 154);
+  --ld-on-green: oklch(0.18 0.03 158);
+  --ld-glow: oklch(0.78 0.2 152 / 0.45);
+
+  background: var(--ld-bg);
+  color: var(--ld-text);
+  font-family: var(--font-landing-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.005em;
+}
+
+.landing-root .ld-display {
+  font-family: var(--font-landing-display), system-ui, sans-serif;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+}
+
+/* Faint technical grid, like a map graticule. */
+.ld-grid {
+  background-image:
+    linear-gradient(to right, oklch(0.3 0.016 158 / 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.3 0.016 158 / 0.4) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 30%, transparent 75%);
+}
+
+/* Charging-pin pulse used in the hero map visual. */
+@keyframes ld-pin-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(2.4); opacity: 0; }
+}
+
+.ld-pin-ring {
+  animation: ld-pin-pulse 3.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ld-pin-ring { animation: none; opacity: 0; }
+}

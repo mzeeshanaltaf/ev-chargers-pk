@@ -20,21 +20,26 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
 interface HeaderProps {
   isSidebarVisible?: boolean;
   onToggleSidebar?: () => void;
+  /** Hide Terms/Privacy from the nav (used on /map to keep it uncluttered). */
+  hideLegalLinks?: boolean;
 }
 
 const NAV_LINKS = [
   { href: "/about", label: "About" },
   { href: "/stats", label: "Stats" },
-  { href: "/credits", label: "Credits" },
   { href: "/terms", label: "Terms" },
   { href: "/privacy", label: "Privacy" },
   { href: "/contact", label: "Contact Us" },
 ];
 
-export function Header({ isSidebarVisible, onToggleSidebar }: HeaderProps) {
+export function Header({ isSidebarVisible, onToggleSidebar, hideLegalLinks }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const { user, isAuthenticated, isHydrated, logout } = useAuth();
+
+  const navLinks = hideLegalLinks
+    ? NAV_LINKS.filter((l) => l.href !== "/terms" && l.href !== "/privacy")
+    : NAV_LINKS;
 
   return (
     <>
@@ -78,7 +83,7 @@ export function Header({ isSidebarVisible, onToggleSidebar }: HeaderProps) {
       <div className="flex items-center gap-1">
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-1 mr-2">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -133,7 +138,7 @@ export function Header({ isSidebarVisible, onToggleSidebar }: HeaderProps) {
       {mobileMenuOpen && (
         <div className="absolute top-14 left-0 right-0 bg-surface border-b border-border shadow-lg z-40 md:hidden">
           <nav className="flex flex-col p-2">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
