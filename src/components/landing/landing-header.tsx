@@ -4,14 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { LightningIcon, XIcon } from "@/components/icons";
 
-// Root-relative hashes so the header works both on the landing and on the
-// content pages that reuse it (e.g. /terms) — navigating home, then scrolling.
+// Page links route to their own pages, so this header works from any page that
+// reuses it (landing, /about, /stats, etc.).
 const NAV = [
   { href: "/map", label: "Map" },
-  { href: "/#cities", label: "Cities" },
-  { href: "/#how", label: "How it works" },
-  { href: "/#about", label: "About" },
-  { href: "/#stats", label: "Stats" },
+  { href: "/chargers", label: "Chargers" },
+  { href: "/about", label: "About" },
+  { href: "/stats", label: "Stats" },
   { href: "/contact", label: "Contact Us" },
 ];
 

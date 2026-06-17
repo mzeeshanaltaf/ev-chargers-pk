@@ -95,7 +95,7 @@ export function AppShell() {
       <Header
         isSidebarVisible={sidebarVisible}
         onToggleSidebar={() => setSidebarVisible((v) => !v)}
-        hideLegalLinks
+        centeredNav
       />
 
       <div className="flex flex-1 min-h-0">

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { LightningIcon, XIcon, UserIcon, LogOutIcon } from "@/components/icons";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from "@/components/auth-provider";
 import { SignInModal } from "@/components/auth/sign-in-modal";
 
@@ -22,6 +21,11 @@ interface HeaderProps {
   onToggleSidebar?: () => void;
   /** Hide Terms/Privacy from the nav (used on /map to keep it uncluttered). */
   hideLegalLinks?: boolean;
+  /**
+   * Center the nav with the marketing link set + an "Open the Map" CTA, matching
+   * the landing/content pages (used on the /chargers SEO pages).
+   */
+  centeredNav?: boolean;
 }
 
 const NAV_LINKS = [
@@ -32,14 +36,26 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact Us" },
 ];
 
-export function Header({ isSidebarVisible, onToggleSidebar, hideLegalLinks }: HeaderProps) {
+// Mirrors the landing header (src/components/landing/landing-header.tsx) so the
+// charger SEO pages share the same centered nav as /about, /stats, etc.
+const MARKETING_NAV = [
+  { href: "/map", label: "Map" },
+  { href: "/chargers", label: "Chargers" },
+  { href: "/about", label: "About" },
+  { href: "/stats", label: "Stats" },
+  { href: "/contact", label: "Contact Us" },
+];
+
+export function Header({ isSidebarVisible, onToggleSidebar, hideLegalLinks, centeredNav }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const { user, isAuthenticated, isHydrated, logout } = useAuth();
 
-  const navLinks = hideLegalLinks
-    ? NAV_LINKS.filter((l) => l.href !== "/terms" && l.href !== "/privacy")
-    : NAV_LINKS;
+  const navLinks = centeredNav
+    ? MARKETING_NAV
+    : hideLegalLinks
+      ? NAV_LINKS.filter((l) => l.href !== "/terms" && l.href !== "/privacy")
+      : NAV_LINKS;
 
   return (
     <>
@@ -80,9 +96,9 @@ export function Header({ isSidebarVisible, onToggleSidebar, hideLegalLinks }: He
         </Link>
       </div>
 
-      <div className="flex items-center gap-1">
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1 mr-2">
+      {/* Centered nav (charger SEO pages) — absolutely centered like the landing header */}
+      {centeredNav && (
+        <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -93,6 +109,40 @@ export function Header({ isSidebarVisible, onToggleSidebar, hideLegalLinks }: He
             </Link>
           ))}
         </nav>
+      )}
+
+      <div className="flex items-center gap-1">
+        {/* Desktop nav (default left-aligned variant) */}
+        {!centeredNav && (
+          <nav className="hidden md:flex items-center gap-1 mr-2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        )}
+
+        {/* Open the Map CTA (centered-nav variant; hidden on the map itself).
+            Styled to match the landing header's button — literal green values so
+            we don't pull the .landing-root-scoped --ld tokens into the app UI. */}
+        {centeredNav && !onToggleSidebar && (
+          <Link
+            href="/map"
+            className="hidden sm:inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-transform hover:scale-[1.03] mr-1"
+            style={{
+              background: "oklch(0.78 0.2 152)",
+              color: "oklch(0.18 0.03 158)",
+              boxShadow: "0 0 24px oklch(0.78 0.2 152 / 0.45)",
+            }}
+          >
+            Open the Map
+          </Link>
+        )}
 
         {/* Desktop auth */}
         {isHydrated && (
@@ -122,8 +172,6 @@ export function Header({ isSidebarVisible, onToggleSidebar, hideLegalLinks }: He
           </div>
         )}
 
-        <ThemeToggle />
-
         {/* Mobile menu toggle */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -148,6 +196,16 @@ export function Header({ isSidebarVisible, onToggleSidebar, hideLegalLinks }: He
                 {link.label}
               </Link>
             ))}
+            {centeredNav && !onToggleSidebar && (
+              <Link
+                href="/map"
+                onClick={() => setMobileMenuOpen(false)}
+                className="mt-1 inline-flex items-center justify-center rounded-full px-4 py-3 text-sm font-semibold"
+                style={{ background: "oklch(0.78 0.2 152)", color: "oklch(0.18 0.03 158)" }}
+              >
+                Open the Map
+              </Link>
+            )}
             {isHydrated && (
               <div className="border-t border-border mt-1 pt-1">
                 {isAuthenticated ? (

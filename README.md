@@ -14,12 +14,13 @@ A community-driven directory for discovering and adding EV charging stations acr
 - **Filters** — Filter by province, city, location type, cost range, and 24-hour availability
 - **My Location** — Geolocation button centers the map on the user's position with a blue dot
 - **Fit All** — One-click button zooms to show all chargers on screen
-- **Dark / Light Theme** — System-aware theme toggle with matching CartoDB map tiles
-- **City & Charger Pages** — SEO-friendly city lists (`/chargers/[city]`) and per-charger detail pages (`/chargers/[city]/[slug]`) with full info, record metadata (added/updated by), `EVChargingStation` JSON-LD, and community comments
+- **Dark / Light Theme** — System-aware light/dark theme with matching CartoDB map tiles
+- **Charger Directory** — SEO-friendly index of all chargers grouped by city (`/chargers`), per-city lists (`/chargers/[city]`), and per-charger detail pages (`/chargers/[city]/[slug]`) with full info, record metadata (added/updated by), `EVChargingStation` JSON-LD, and community comments
+- **Inline Editing** — Signed-in admins can edit a charger directly from its detail page (reusing the map app's edit flow)
 - **Comments & Reactions** — Any visitor can register with a name + math captcha, leave comments, and like/dislike reactions with toggle support
 - **Stats Page** — Live statistics: total chargers, DC/AC split, 24-hour availability, currently open, and breakdowns by province and location type
 - **Authentication** — Sign in with email/password; only authorized users can add chargers
-- **Add Charger** — Form with embedded location picker map; supports click or right-click to drop a pin (authenticated users only)
+- **Add / Edit Charger** — Form with embedded location picker map; supports click or right-click to drop a pin (authenticated users only). Chargers can be edited from the map sidebar or a charger's detail page
 - **Static Pages** — About, Stats, Credits, Terms of Service, Privacy Policy, and Contact Us
 - **Contact Form** — Bot protection via honeypot field and math captcha challenge
 
@@ -80,6 +81,7 @@ src/
 │   │   └── users/route.ts      # Proxy to n8n register_user webhook
 │   ├── page.tsx                # Marketing landing page (server component)
 │   ├── map/page.tsx            # Interactive map app (AppShell)
+│   ├── chargers/page.tsx       # Index of all chargers grouped by city
 │   ├── chargers/[city]/        # City list + [slug] detail page (+ OG image)
 │   ├── [id]/page.tsx           # Legacy redirect to canonical charger path
 │   ├── about/ contact/ credits/ privacy/ stats/ terms/   # Info pages

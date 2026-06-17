@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { fetchChargers, findChargerByIdSuffix } from "@/lib/charger-fetch";
 import { chargerCanonicalPath, citySlug, cityDisplayName } from "@/lib/slug";
@@ -11,6 +10,7 @@ import { Header } from "@/components/header";
 import { PageFooter } from "@/components/page-footer";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CommentsClient } from "./comments-client";
+import { EditChargerControl } from "./edit-charger-control";
 import type { Charger } from "@/lib/types";
 
 function formatDate(dateStr: string): string {
@@ -101,7 +101,7 @@ export default async function ChargerDetailPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(evStationJsonLd) }}
       />
 
-      <Header />
+      <Header centeredNav />
 
       <main className="max-w-2xl mx-auto px-6 py-10 space-y-8">
 
@@ -186,18 +186,21 @@ export default async function ChargerDetailPage({
 
           <div className="flex items-center justify-between border-t border-border pt-3">
             <LocationTypeBadge type={charger.location_type} />
-            <a
-              href={`https://www.google.com/maps?q=${charger.latitude},${charger.longitude}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:text-brand hover:bg-brand/10 transition-colors"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              Open in Google Maps
-            </a>
+            <div className="flex items-center gap-1">
+              <EditChargerControl charger={charger} />
+              <a
+                href={`https://www.google.com/maps?q=${charger.latitude},${charger.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:text-brand hover:bg-brand/10 transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Open in Google Maps
+              </a>
+            </div>
           </div>
         </section>
 

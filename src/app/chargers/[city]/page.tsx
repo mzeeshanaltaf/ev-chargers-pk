@@ -51,7 +51,7 @@ export default async function CityPage({
   if (cityChargers.length === 0) {
     return (
       <div className="min-h-screen bg-surface flex flex-col">
-        <Header />
+        <Header centeredNav />
         <main className="flex-1 flex flex-col items-center justify-center px-6 py-20 text-center">
           <div className="w-16 h-16 rounded-2xl bg-surface-raised border border-border flex items-center justify-center mb-6">
             <LightningIcon className="w-8 h-8 text-text-secondary/40" fill="currentColor" />
@@ -98,7 +98,7 @@ export default async function CityPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
 
-      <Header />
+      <Header centeredNav />
 
       <main className="max-w-2xl mx-auto px-6 py-10">
         <Breadcrumbs items={[

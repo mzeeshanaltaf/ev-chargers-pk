@@ -128,6 +128,33 @@ export default function AboutPage() {
           </div>
         </div>
 
+        <H2>About the Developer</H2>
+        <div className="not-prose">
+          <div className="rounded-xl p-6" style={ld.card}>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={ld.iconWrap}>
+                <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="ld-display text-base font-semibold" style={ld.text}>Zeeshan Altaf</h3>
+                <p className="text-xs" style={ld.dim}>Creator &amp; Developer of ChargeMap PK</p>
+              </div>
+            </div>
+            <p className="text-sm leading-relaxed" style={ld.muted}>
+              Designed and built ChargeMap PK with 💖 for the PAK EVs Community — to
+              make EV charging information across Pakistan accessible, accurate, and
+              open to everyone. Learn more about other projects at{" "}
+              <a href="https://www.zeeshanai.cloud" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--ld-green-bright)" }}>
+                zeeshanai.cloud
+              </a>
+              .
+            </p>
+          </div>
+        </div>
+
         <div className="pt-8 mt-4" style={{ borderTop: "1px solid var(--ld-border)" }}>
           <p className="text-sm" style={ld.muted}>
             Have questions or suggestions?{" "}

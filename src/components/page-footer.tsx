@@ -35,28 +35,13 @@ export function PageFooter() {
         </div>
 
         <div className="border-t border-border pt-4 flex flex-col items-center gap-3">
-          <div className="flex flex-col items-center gap-1">
-            <p className="text-sm font-medium text-text-secondary">
-              Developed with 💖 by{" "}
-              <a
-                href="https://www.zeeshanai.cloud"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-brand underline hover:text-brand/80 transition-colors"
-              >
-                Zeeshan Altaf
-              </a>
-            </p>
-            <p className="text-xs text-text-secondary/60">for PAK EVs Community</p>
-          </div>
           <div className="flex flex-col md:flex-row items-center justify-between w-full gap-3">
             <p>&copy; {year} ChargeMap PK. All rights reserved.</p>
             <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
               <Link href="/map" className="hover:text-text-primary transition-colors">Map</Link>
-              <Link href="/#cities" className="hover:text-text-primary transition-colors">Cities</Link>
-              <Link href="/#how" className="hover:text-text-primary transition-colors">How it works</Link>
-              <Link href="/#about" className="hover:text-text-primary transition-colors">About</Link>
-              <Link href="/#stats" className="hover:text-text-primary transition-colors">Stats</Link>
+              <Link href="/chargers" className="hover:text-text-primary transition-colors">Chargers</Link>
+              <Link href="/about" className="hover:text-text-primary transition-colors">About</Link>
+              <Link href="/stats" className="hover:text-text-primary transition-colors">Stats</Link>
               <Link href="/contact" className="hover:text-text-primary transition-colors">Contact</Link>
               <Link href="/terms" className="hover:text-text-primary transition-colors">Terms</Link>
               <Link href="/privacy" className="hover:text-text-primary transition-colors">Privacy</Link>
