@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# docs (local planning notes, not tracked)
+/docs
+
 # debug
 npm-debug.log*
 yarn-debug.log*
