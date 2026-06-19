@@ -122,7 +122,7 @@ export function AppShell() {
               onClearFilters={clearFilters}
               hasActiveFilters={hasActiveFilters}
               onEditCharger={isAuthenticated ? setEditingCharger : undefined}
-              onDeleteCharger={undefined}
+              onDeleteCharger={isAuthenticated ? handleDeleteCharger : undefined}
             />
           )}
         </div>
@@ -191,7 +191,7 @@ export function AppShell() {
                 onClearFilters={clearFilters}
                 hasActiveFilters={hasActiveFilters}
                 onEditCharger={isAuthenticated ? setEditingCharger : undefined}
-                onDeleteCharger={undefined}
+                onDeleteCharger={isAuthenticated ? handleDeleteCharger : undefined}
               />
             )}
           </div>

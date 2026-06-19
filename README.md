@@ -16,11 +16,11 @@ A community-driven directory for discovering and adding EV charging stations acr
 - **Fit All** — One-click button zooms to show all chargers on screen
 - **Dark / Light Theme** — System-aware light/dark theme with matching CartoDB map tiles
 - **Charger Directory** — SEO-friendly index of all chargers grouped by city (`/chargers`), per-city lists (`/chargers/[city]`), and per-charger detail pages (`/chargers/[city]/[slug]`) with full info, record metadata (added/updated by), `EVChargingStation` JSON-LD, and community comments
-- **Inline Editing** — Signed-in admins can edit a charger directly from its detail page (reusing the map app's edit flow)
+- **Inline Editing** — Signed-in admins can edit or delete a charger directly from its detail page (reusing the map app's mutation flows)
 - **Comments & Reactions** — Any visitor can register with a name + math captcha, leave comments, and like/dislike reactions with toggle support
 - **Stats Page** — Live statistics: total chargers, DC/AC split, 24-hour availability, currently open, and breakdowns by province and location type
 - **Authentication** — Sign in with email/password; only authorized users can add chargers
-- **Add / Edit Charger** — Form with embedded location picker map; supports click or right-click to drop a pin (authenticated users only). Chargers can be edited from the map sidebar or a charger's detail page
+- **Add / Edit / Delete Charger** — Form with embedded location picker map; supports click or right-click to drop a pin (authenticated users only). Chargers can be edited or deleted from the map sidebar or a charger's detail page, each with a confirmation step
 - **Static Pages** — About, Stats, Credits, Terms of Service, Privacy Policy, and Contact Us
 - **Contact Form** — Bot protection via honeypot field and math captcha challenge
 
