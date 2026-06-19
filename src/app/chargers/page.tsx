@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchChargers } from "@/lib/charger-fetch";
 import { citySlug, cityDisplayName, chargerCanonicalPath } from "@/lib/slug";
 import { formatPower, formatCost } from "@/lib/format";
+import { jsonLdScript } from "@/lib/json-ld";
 import { LightningIcon } from "@/components/icons";
 import { InfoTip } from "@/components/info-tip";
 import { Header } from "@/components/header";
@@ -92,7 +93,7 @@ export default async function ChargersIndexPage() {
     <div className="min-h-screen bg-surface">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(itemListJsonLd) }}
       />
 
       <Header centeredNav />

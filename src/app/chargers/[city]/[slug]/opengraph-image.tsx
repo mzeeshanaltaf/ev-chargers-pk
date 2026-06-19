@@ -7,7 +7,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 function idSuffixFromSlug(slug: string): string {
-  return slug.slice(-5);
+  return slug.split("-").pop() ?? slug;
 }
 
 export default async function ChargerOgImage({

@@ -27,6 +27,10 @@ export async function fetchChargers(): Promise<Charger[]> {
   }
 }
 
+// Match by `endsWith` rather than a fixed slice so both current 8-char slugs
+// and older 5-char links resolve to the same charger.
 export function findChargerByIdSuffix(chargers: Charger[], suffix: string): Charger | undefined {
-  return chargers.find((c) => c.id.slice(-5).toLowerCase() === suffix.toLowerCase());
+  const s = suffix.toLowerCase();
+  if (!s) return undefined;
+  return chargers.find((c) => c.id.toLowerCase().endsWith(s));
 }

@@ -35,6 +35,23 @@ export function relativeTimeAgo(dateStr: string): string {
   return `${years} year${years === 1 ? "" : "s"} ago`;
 }
 
+/**
+ * Fine-grained relative time for comment timestamps: "just now", "5m ago",
+ * "3h ago", "2d ago", then a locale date. Returns "" for invalid input.
+ */
+export function shortTimeAgo(dateStr: string): string {
+  const t = new Date(dateStr).getTime();
+  if (isNaN(t)) return "";
+  const mins = Math.floor((Date.now() - t) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  return new Date(dateStr).toLocaleDateString();
+}
+
 export function formatPhone(phone: string): string {
   if (!phone) return "";
   const cleaned = phone.replace(/\D/g, "");
@@ -53,8 +70,18 @@ import type { Charger } from "@/lib/types";
 
 type DayPrefix = "weekday" | "friday" | "weekend";
 
+function dayPrefix(date: Date): DayPrefix {
+  const day = date.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  if (day === 5) return "friday";
+  if (day === 0 || day === 6) return "weekend";
+  return "weekday";
+}
+
+// Returns NaN for malformed "HH:MM" so callers can detect and skip bad data
+// rather than computing with NaN.
 function parseMins(t: string): number {
   const [h, m] = t.split(":").map(Number);
+  if (!Number.isFinite(h) || !Number.isFinite(m)) return NaN;
   return h * 60 + m;
 }
 
@@ -63,24 +90,23 @@ export function isChargerOpenNow(charger: Charger): boolean {
   if (charger.is_available_24hrs) return true;
 
   const now = new Date();
-  const day = now.getDay(); // 0=Sun,1=Mon,...,6=Sat
-  let prefix: DayPrefix;
-  if (day === 5) prefix = "friday";
-  else if (day === 0 || day === 6) prefix = "weekend";
-  else prefix = "weekday";
-
-  const hours = charger.opening_hours?.[prefix];
+  const hours = charger.opening_hours?.[dayPrefix(now)];
   if (!hours) return true; // hours not set — assume open
   if (hours.closed) return false;
   if (!hours.open || !hours.close) return true;
 
+  const openMins = parseMins(hours.open);
+  const closeMins = parseMins(hours.close);
+  if (Number.isNaN(openMins) || Number.isNaN(closeMins)) return true; // malformed — assume open
+
   const nowMins = now.getHours() * 60 + now.getMinutes();
-  return nowMins >= parseMins(hours.open) && nowMins < parseMins(hours.close);
+  return nowMins >= openMins && nowMins < closeMins;
 }
 
 export function formatTime(t: string | undefined): string {
   if (!t) return "";
   const [h, m] = t.split(":").map(Number);
+  if (!Number.isFinite(h) || !Number.isFinite(m)) return "";
   const ampm = h >= 12 ? "PM" : "AM";
   const h12 = h % 12 || 12;
   return `${h12}:${m.toString().padStart(2, "0")} ${ampm}`;
@@ -95,13 +121,7 @@ export function formatDayHours(hours: { open: string; close: string; closed: boo
 
 export function getTodayHours(charger: Charger): string {
   if (charger.is_available_24hrs) return "24 Hours";
-  const day = new Date().getDay();
-  let prefix: DayPrefix;
-  if (day === 5) prefix = "friday";
-  else if (day === 0 || day === 6) prefix = "weekend";
-  else prefix = "weekday";
-
-  const hours = charger.opening_hours?.[prefix];
+  const hours = charger.opening_hours?.[dayPrefix(new Date())];
   if (!hours) return "";
   if (hours.closed) return "Closed today";
   if (!hours.open || !hours.close) return "";

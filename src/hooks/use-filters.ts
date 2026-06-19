@@ -36,9 +36,18 @@ export function useFilters(chargers: Charger[]) {
   }, [chargers]);
 
   const costBounds = useMemo((): [number, number] => {
-    if (chargers.length === 0) return [0, 200];
-    const costs = chargers.map((c) => c.cost_per_kwh);
-    return [Math.floor(Math.min(...costs)), Math.ceil(Math.max(...costs))];
+    // Reduce instead of Math.min(...costs) — spreading a large array risks a
+    // call-stack overflow. Skip non-finite costs from upstream.
+    let min = Infinity;
+    let max = -Infinity;
+    for (const c of chargers) {
+      const cost = c.cost_per_kwh;
+      if (!Number.isFinite(cost)) continue;
+      if (cost < min) min = cost;
+      if (cost > max) max = cost;
+    }
+    if (min === Infinity) return [0, 200];
+    return [Math.floor(min), Math.ceil(max)];
   }, [chargers]);
 
   const filteredChargers = useMemo(() => {

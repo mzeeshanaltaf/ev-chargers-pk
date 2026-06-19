@@ -1,19 +1,13 @@
 import { NextResponse } from "next/server";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 const CONTACT_WEBHOOK_URL =
   "https://n8n.zeeshanai.cloud/webhook/3698c537-566e-4f92-90e9-9bf374619b7e";
 
-function getClientIp(request: Request): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  return request.headers.get("x-real-ip") || "unknown";
-}
-
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request);
-    const { success } = await checkRateLimit(ip);
+    const { success } = await checkRateLimit(ip, "contact");
     if (!success) {
       return NextResponse.json(
         { error: "Too many requests. Please try again later." },

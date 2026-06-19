@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { fetchChargers } from "@/lib/charger-fetch";
 import { citySlug, cityDisplayName, chargerCanonicalPath } from "@/lib/slug";
+import { jsonLdScript } from "@/lib/json-ld";
 import { formatPower, formatCost } from "@/lib/format";
 import { LightningIcon } from "@/components/icons";
 import { InfoTip } from "@/components/info-tip";
@@ -10,6 +11,12 @@ import { PageFooter } from "@/components/page-footer";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ChargerTypeBadge, ActiveBadge } from "@/components/badges";
 import type { Charger } from "@/lib/types";
+
+export async function generateStaticParams() {
+  const chargers = await fetchChargers();
+  const cities = new Set(chargers.map((c) => citySlug(c)));
+  return Array.from(cities).map((city) => ({ city }));
+}
 
 export async function generateMetadata({
   params,
@@ -95,7 +102,7 @@ export default async function CityPage({
     <div className="min-h-screen bg-surface">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(itemListJsonLd) }}
       />
 
       <Header centeredNav />

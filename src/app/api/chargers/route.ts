@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
+import { readSession } from "@/lib/session";
 
 const WEBHOOK_URL = process.env.N8N_WEBHOOK_URL!;
 const API_KEY = process.env.N8N_API_KEY!;
+
+const unauthorized = () =>
+  NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
 export async function GET() {
   try {
@@ -18,7 +22,7 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to fetch chargers" },
-        { status: res.status }
+        { status: 502 }
       );
     }
 
@@ -43,6 +47,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    if (!(await readSession())) return unauthorized();
+
     const body = await request.json();
 
     const res = await fetch(WEBHOOK_URL, {
@@ -60,7 +66,7 @@ export async function POST(request: Request) {
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to insert charger" },
-        { status: res.status }
+        { status: 502 }
       );
     }
 
@@ -76,6 +82,8 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
+    if (!(await readSession())) return unauthorized();
+
     const body = await request.json();
 
     const res = await fetch(WEBHOOK_URL, {
@@ -94,7 +102,7 @@ export async function PUT(request: Request) {
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to update charger" },
-        { status: res.status }
+        { status: 502 }
       );
     }
 
@@ -110,6 +118,8 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    if (!(await readSession())) return unauthorized();
+
     const { id } = await request.json();
 
     const res = await fetch(WEBHOOK_URL, {
@@ -124,7 +134,7 @@ export async function DELETE(request: Request) {
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to delete charger" },
-        { status: res.status }
+        { status: 502 }
       );
     }
 

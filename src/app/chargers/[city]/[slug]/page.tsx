@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchChargers, findChargerByIdSuffix } from "@/lib/charger-fetch";
-import { chargerCanonicalPath, citySlug, cityDisplayName } from "@/lib/slug";
+import { chargerCanonicalPath, chargerSlug, citySlug, cityDisplayName } from "@/lib/slug";
+import { jsonLdScript } from "@/lib/json-ld";
 import { formatPower, formatCost, formatDayHours } from "@/lib/format";
 import { Badge24hr, ActiveBadge, ChargerTypeBadge, LocationTypeBadge } from "@/components/badges";
 import { LightningIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
@@ -17,14 +18,21 @@ function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString("en-PK", { year: "numeric", month: "long", day: "numeric" });
 }
 
+// The id fragment is the final hyphen-delimited segment of the slug (it never
+// contains a hyphen), so this works regardless of suffix length.
 function idSuffixFromSlug(slug: string): string {
-  return slug.slice(-5);
+  return slug.split("-").pop() ?? slug;
 }
 
 async function getCharger(slug: string): Promise<Charger | null> {
   const chargers = await fetchChargers();
   const suffix = idSuffixFromSlug(slug);
   return findChargerByIdSuffix(chargers, suffix) ?? null;
+}
+
+export async function generateStaticParams() {
+  const chargers = await fetchChargers();
+  return chargers.map((c) => ({ city: citySlug(c), slug: chargerSlug(c) }));
 }
 
 export async function generateMetadata({
@@ -98,7 +106,7 @@ export default async function ChargerDetailPage({
     <div className="min-h-screen bg-surface">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(evStationJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(evStationJsonLd) }}
       />
 
       <Header centeredNav />

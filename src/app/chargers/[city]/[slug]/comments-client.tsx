@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import type { Comment } from "@/lib/types";
+import { shortTimeAgo } from "@/lib/format";
 
 interface RegisteredUser {
   id: number;
@@ -10,18 +11,6 @@ interface RegisteredUser {
 
 interface CommentsClientProps {
   chargerId: string;
-}
-
-function timeAgo(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-  return new Date(dateStr).toLocaleDateString();
 }
 
 export function CommentsClient({ chargerId }: CommentsClientProps) {
@@ -42,8 +31,10 @@ export function CommentsClient({ chargerId }: CommentsClientProps) {
   const [commentText, setCommentText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [userReactions, setUserReactions] = useState<Record<number, "like" | "dislike" | null>>({});
+  const [reactionsHydrated, setReactionsHydrated] = useState(false);
 
   const registrationRef = useRef<HTMLDivElement>(null);
+  const reactionsKey = `chargemappk_reactions_${chargerId}`;
 
   useEffect(() => {
     try {
@@ -57,6 +48,30 @@ export function CommentsClient({ chargerId }: CommentsClientProps) {
       localStorage.removeItem("chargemappk_user");
     }
   }, []);
+
+  // Restore this user's prior reactions for this charger so the toggle UI stays
+  // in sync with the server counts across reloads (server counts already include
+  // the user's vote). Without this, re-clicking would double-count.
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(reactionsKey);
+      if (stored) setUserReactions(JSON.parse(stored));
+    } catch {
+      /* ignore malformed storage */
+    }
+    setReactionsHydrated(true);
+  }, [reactionsKey]);
+
+  // Persist reactions only after hydration, so we never overwrite stored state
+  // with the initial empty object on first render.
+  useEffect(() => {
+    if (!reactionsHydrated) return;
+    try {
+      localStorage.setItem(reactionsKey, JSON.stringify(userReactions));
+    } catch {
+      /* ignore quota errors */
+    }
+  }, [userReactions, reactionsHydrated, reactionsKey]);
 
   useEffect(() => {
     fetch(`/api/comments?charger_id=${chargerId}`)
@@ -149,11 +164,17 @@ export function CommentsClient({ chargerId }: CommentsClientProps) {
       });
       const data = await res.json();
       const result = Array.isArray(data) ? data[0] : data;
-      if (result?.total_like_counts != null) {
+      // Reconcile with server totals, but never overwrite a count with
+      // `undefined` when only one of the two totals is returned.
+      if (result?.total_like_counts != null || result?.total_dislike_counts != null) {
         setComments((prev) =>
           prev.map((c) =>
             c.id === commentId
-              ? { ...c, like_count: result.total_like_counts, dislike_count: result.total_dislike_counts }
+              ? {
+                  ...c,
+                  like_count: result.total_like_counts ?? c.like_count,
+                  dislike_count: result.total_dislike_counts ?? c.dislike_count,
+                }
               : c
           )
         );
@@ -183,11 +204,11 @@ export function CommentsClient({ chargerId }: CommentsClientProps) {
             <div key={comment.id} className="rounded-xl border border-border bg-surface-raised p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-text-primary">
-                  {registeredUser && registeredUser.id === comment.user_id
+                  {registeredUser && String(registeredUser.id) === String(comment.user_id)
                     ? registeredUser.name
                     : `User #${comment.user_id}`}
                 </span>
-                <span className="text-xs text-text-secondary">{timeAgo(comment.created_at)}</span>
+                <span className="text-xs text-text-secondary">{shortTimeAgo(comment.created_at)}</span>
               </div>
               <p className="text-sm text-text-primary">{comment.content}</p>
               <div className="flex items-center gap-2 pt-1">

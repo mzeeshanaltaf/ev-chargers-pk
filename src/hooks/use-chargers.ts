@@ -25,7 +25,15 @@ export function useChargers() {
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("Failed to add charger");
-    const newChargers: Charger[] = await res.json();
+    // The n8n insert response shape isn't guaranteed to be a Charger[]. Normalize
+    // so a malformed body can't corrupt the cached list — the `revalidate: true`
+    // refetch is the source of truth either way.
+    const data = await res.json();
+    const newChargers: Charger[] = Array.isArray(data)
+      ? data
+      : data && typeof data === "object" && "id" in data
+        ? [data as Charger]
+        : [];
     mutate(
       (current) => [...(current || []), ...newChargers],
       { revalidate: true }

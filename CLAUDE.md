@@ -29,7 +29,9 @@ per-city and per-charger pages, with a marketing landing page at `/`.
 - No direct DB. The browser/server calls **n8n webhooks**, proxied through
   Next.js route handlers so the API key never reaches the client.
 - Env (in `.env.local`): `N8N_WEBHOOK_URL`, `N8N_API_KEY`. When unset,
-  `fetchChargers()` returns `[]` so pages still render.
+  `fetchChargers()` returns `[]` so pages still render. `SESSION_SECRET` signs
+  the admin session cookie (`src/lib/session.ts`) that gates charger mutations;
+  when unset, `verifySession` rejects every token so all mutations return 401.
 - Route handlers live in `src/app/api/*/route.ts` (`chargers`, `auth`,
   `comments`, `contact`, `users`). The chargers handler sends
   `event_type` payloads (`get_ev_chargers`, `insert_ev_charger`,

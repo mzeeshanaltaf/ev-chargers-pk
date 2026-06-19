@@ -92,6 +92,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem(STORAGE_KEY);
+    // Clear the httpOnly session cookie server-side (fire-and-forget).
+    fetch("/api/auth", { method: "DELETE" }).catch(() => {});
   }, []);
 
   return (

@@ -50,7 +50,20 @@ Create a `.env.local` file in the project root:
 ```env
 N8N_WEBHOOK_URL=https://your-n8n-instance/webhook/your-webhook-id
 N8N_API_KEY=your-api-key
+
+# Signs the admin session cookie (HMAC-SHA256) that gates charger mutations.
+# Generate with: node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+SESSION_SECRET=your-generated-secret
+
+# Optional — enables rate limiting on contact/comments/users routes (Upstash Redis).
+# When unset, rate limiting is skipped (fail-open).
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
+
+> **`SESSION_SECRET` is required for admins to add/edit/delete chargers.** When it
+> is unset, every session token fails verification and all charger mutations
+> return `401`.
 
 ### Installation
 
@@ -130,6 +143,16 @@ All requests are proxied through Next.js Route Handlers to keep the API key serv
 
 All requests to n8n include an `x-api-key` header for authentication.
 
+### Session security
+
+Charger mutations (`POST` / `PUT` / `DELETE` on `/api/chargers`) are enforced
+**server-side**: on successful login `/api/auth` issues an httpOnly, signed
+session cookie (`cm_session`, HMAC-SHA256 via `SESSION_SECRET`), and each
+mutation verifies it before forwarding to n8n — returning `401` otherwise. The
+client-side auth state only drives which admin UI renders. The comments and
+users routes set `event_type` server-side from an allowlist and validate input,
+so the shared n8n webhook can't be driven with arbitrary event types.
+
 ### Authentication (n8n side)
 
 The `authenticate_user` webhook branch expects a `users` table:
@@ -156,7 +179,10 @@ Users are pre-created by an admin — there is no self-registration flow.
 
 ## Deployment
 
-The app can be deployed on [Vercel](https://vercel.com) or any Node.js host. Set the environment variables in your hosting provider's dashboard.
+The app can be deployed on [Vercel](https://vercel.com) or any Node.js host. Set
+the environment variables (including a **production-only `SESSION_SECRET`** —
+generate a fresh one, don't reuse the local value) in your hosting provider's
+dashboard, then redeploy for the changes to take effect.
 
 ```bash
 # Vercel
