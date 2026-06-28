@@ -8,7 +8,7 @@ A community-driven directory for discovering and adding EV charging stations acr
 
 - **Marketing Landing** — Dedicated landing page at `/` with live stats, feature highlights, popular cities, and clear paths into the app (the interactive map lives at `/map`)
 - **Interactive Map** — Full-screen Leaflet map of Pakistan with bounded navigation
-- **Charger Markers** — Green (active) and gray (inactive) pins with hover popups and click-to-select
+- **Charger Markers** — Green (active) and gray (inactive) pins with click-to-select and hover popups that stay open while you move into them, so their Maps and detail links are clickable
 - **Sidebar List** — Scrollable card list synced with the map; clicking a card flies to that charger
 - **Collapsible Sidebar** — Toggle sidebar on desktop; draggable bottom sheet on mobile
 - **Filters** — Filter by province, city, location type, cost range, and 24-hour availability
@@ -21,6 +21,7 @@ A community-driven directory for discovering and adding EV charging stations acr
 - **Stats Page** — Live statistics: total chargers, DC/AC split, 24-hour availability, currently open, and breakdowns by province and location type
 - **Authentication** — Sign in with email/password; only authorized users can add chargers
 - **Add / Edit / Delete Charger** — Form with embedded location picker map; supports click or right-click to drop a pin (authenticated users only). Chargers can be edited or deleted from the map sidebar or a charger's detail page, each with a confirmation step
+- **Carriageway Direction** — For directional roads (Motorway, Highway, Off-Motorway), an optional Northbound/Southbound indicator captured on the form and shown on the card, map popup, and detail page
 - **Static Pages** — About, Stats, Credits, Terms of Service, Privacy Policy, and Contact Us
 - **Contact Form** — Bot protection via honeypot field and math captcha challenge
 

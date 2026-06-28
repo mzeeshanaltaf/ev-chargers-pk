@@ -127,11 +127,29 @@ export function ChargerPopup({ charger }: ChargerPopupProps) {
         </div>
       )}
 
-      {/* Location type + Maps link */}
-      <div className="flex items-center justify-between mt-2">
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
-          {charger.location_type}
-        </span>
+      {/* Location type (+ direction) + Maps link */}
+      <div className="flex items-center justify-between gap-2 mt-2">
+        <div className="flex items-center gap-1 flex-wrap">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
+            {charger.location_type}
+          </span>
+          {charger.direction && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600">
+              {charger.direction === "Northbound" ? (
+                <svg className="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="19" x2="12" y2="5" />
+                  <polyline points="5 12 12 5 19 12" />
+                </svg>
+              ) : (
+                <svg className="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <polyline points="19 12 12 19 5 12" />
+                </svg>
+              )}
+              {charger.direction}
+            </span>
+          )}
+        </div>
         <MapsButton charger={charger} />
       </div>
 

@@ -166,6 +166,33 @@ function SidebarResizeHandler({ sidebarVisible }: { sidebarVisible: boolean }) {
   return null;
 }
 
+// Keeps a hover-opened popup alive while the cursor is over the popup itself.
+// Without this, the marker's `mouseout` closes the popup before the user can
+// reach its links. We cancel the pending close on popup mouseenter and
+// reschedule it on mouseleave.
+function PopupHoverKeepAlive({
+  clearCloseTimer,
+  scheduleClose,
+}: {
+  clearCloseTimer: () => void;
+  scheduleClose: (close: () => void) => void;
+}) {
+  const map = useMap();
+  useEffect(() => {
+    const pane = map.getPane("popupPane");
+    if (!pane) return;
+    const onEnter = () => clearCloseTimer();
+    const onLeave = () => scheduleClose(() => map.closePopup());
+    pane.addEventListener("mouseenter", onEnter);
+    pane.addEventListener("mouseleave", onLeave);
+    return () => {
+      pane.removeEventListener("mouseenter", onEnter);
+      pane.removeEventListener("mouseleave", onLeave);
+    };
+  }, [map, clearCloseTimer, scheduleClose]);
+  return null;
+}
+
 interface MapInnerProps {
   chargers: Charger[];
   selectedCharger: Charger | null;
@@ -185,6 +212,22 @@ export default function MapInner({
   const inactiveIcon = useMemo(() => createMarkerIcon(false), []);
   const mapRef = useRef<L.Map | null>(null);
 
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clearCloseTimer = useCallback(() => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
+  const scheduleClose = useCallback(
+    (close: () => void) => {
+      clearCloseTimer();
+      closeTimer.current = setTimeout(close, 250);
+    },
+    [clearCloseTimer]
+  );
+  useEffect(() => clearCloseTimer, [clearCloseTimer]);
+
   return (
     <MapContainer
       center={PAKISTAN_CENTER}
@@ -200,6 +243,7 @@ export default function MapInner({
       <FlyToHandler selectedCharger={selectedCharger} />
       <MapClickHandler onMapRightClick={onMapRightClick} />
       <SidebarResizeHandler sidebarVisible={sidebarVisible} />
+      <PopupHoverKeepAlive clearCloseTimer={clearCloseTimer} scheduleClose={scheduleClose} />
       <CustomControls chargers={chargers} />
 
       {chargers.map((charger) => (
@@ -209,8 +253,14 @@ export default function MapInner({
           icon={charger.is_open ? activeIcon : inactiveIcon}
           eventHandlers={{
             click: () => onSelectCharger(charger),
-            mouseover: (e) => e.target.openPopup(),
-            mouseout: (e) => e.target.closePopup(),
+            mouseover: (e) => {
+              clearCloseTimer();
+              e.target.openPopup();
+            },
+            mouseout: (e) => {
+              const marker = e.target;
+              scheduleClose(() => marker.closePopup());
+            },
           }}
         >
           <Popup>

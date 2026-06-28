@@ -1,6 +1,6 @@
 "use client";
 
-import { ClockIcon } from "@/components/icons";
+import { ClockIcon, ArrowUpIcon, ArrowDownIcon } from "@/components/icons";
 
 export function Badge24hr() {
   return (
@@ -44,6 +44,17 @@ export function ChargerTypeBadge({ type }: { type: string }) {
           </svg>
       )}
       {type}
+    </span>
+  );
+}
+
+export function DirectionBadge({ direction }: { direction: string }) {
+  const isNorth = direction === "Northbound";
+  const Arrow = isNorth ? ArrowUpIcon : ArrowDownIcon;
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-surface-raised text-text-secondary border border-border">
+      <Arrow className="w-3 h-3 shrink-0" />
+      {direction}
     </span>
   );
 }

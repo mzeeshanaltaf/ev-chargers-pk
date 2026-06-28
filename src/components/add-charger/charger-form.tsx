@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Charger, ChargerInsertPayload } from "@/lib/types";
-import { PROVINCES, LOCATION_TYPES, CHARGER_TYPES } from "@/lib/types";
+import { PROVINCES, LOCATION_TYPES, CHARGER_TYPES, DIRECTIONS, DIRECTIONAL_LOCATION_TYPES } from "@/lib/types";
 import { validateChargerForm, type ValidationErrors } from "@/lib/validate";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -99,6 +99,7 @@ export function ChargerForm({ initialLat, initialLng, initialAddress, initialDat
     city: initialData?.city || "",
     province_territory: initialData?.province_territory || "",
     location_type: initialData?.location_type || "",
+    direction: initialData?.direction || "",
     charger_type: initialData?.charger_type || "",
     power_kw: initialData ? String(initialData.power_kw) : "",
     cost_per_kw: initialData ? String(initialData.cost_per_kwh) : "",
@@ -144,6 +145,7 @@ export function ChargerForm({ initialLat, initialLng, initialAddress, initialDat
       city: formData.city,
       province_territory: formData.province_territory,
       location_type: formData.location_type,
+      direction: formData.direction,
       charger_type: formData.charger_type,
       power_kw: formData.power_kw,
       cost_per_kw: formData.cost_per_kw,
@@ -245,11 +247,28 @@ export function ChargerForm({ initialLat, initialLng, initialAddress, initialDat
       <Select
         label="Location Type"
         value={formData.location_type}
-        onChange={(e) => updateField("location_type", e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+          updateField("location_type", value);
+          if (!DIRECTIONAL_LOCATION_TYPES.includes(value as (typeof DIRECTIONAL_LOCATION_TYPES)[number])) {
+            updateField("direction", "");
+          }
+        }}
         error={errors.location_type}
         options={LOCATION_TYPES.map((t) => ({ value: t, label: t }))}
         placeholder="Select..."
       />
+
+      {DIRECTIONAL_LOCATION_TYPES.includes(formData.location_type as (typeof DIRECTIONAL_LOCATION_TYPES)[number]) && (
+        <Select
+          label="Direction (optional)"
+          value={formData.direction}
+          onChange={(e) => updateField("direction", e.target.value)}
+          error={errors.direction}
+          options={DIRECTIONS.map((d) => ({ value: d, label: d }))}
+          placeholder="Select..."
+        />
+      )}
 
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium text-text-secondary">Charger Type</label>

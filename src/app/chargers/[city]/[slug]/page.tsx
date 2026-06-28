@@ -4,7 +4,7 @@ import { fetchChargers, findChargerByIdSuffix } from "@/lib/charger-fetch";
 import { chargerCanonicalPath, chargerSlug, citySlug, cityDisplayName } from "@/lib/slug";
 import { jsonLdScript } from "@/lib/json-ld";
 import { formatPower, formatCost, formatDayHours } from "@/lib/format";
-import { Badge24hr, ActiveBadge, ChargerTypeBadge, LocationTypeBadge } from "@/components/badges";
+import { Badge24hr, ActiveBadge, ChargerTypeBadge, LocationTypeBadge, DirectionBadge } from "@/components/badges";
 import { LightningIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
 import { InfoTip } from "@/components/info-tip";
 import { Header } from "@/components/header";
@@ -193,7 +193,10 @@ export default async function ChargerDetailPage({
           )}
 
           <div className="flex items-center justify-between border-t border-border pt-3">
-            <LocationTypeBadge type={charger.location_type} />
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <LocationTypeBadge type={charger.location_type} />
+              {charger.direction && <DirectionBadge direction={charger.direction} />}
+            </div>
             <div className="flex items-center gap-1">
               <EditChargerControl charger={charger} />
               <a

@@ -11,6 +11,7 @@ export function validateChargerForm(data: {
   city: string;
   province_territory: string;
   location_type: string;
+  direction?: string;
   charger_type: string;
   power_kw: string;
   cost_per_kw: string;

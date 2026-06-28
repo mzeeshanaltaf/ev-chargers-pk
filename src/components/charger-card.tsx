@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { Charger } from "@/lib/types";
 import { chargerCanonicalPath } from "@/lib/slug";
 import { formatPower, formatCost, formatDayHours, formatPhone } from "@/lib/format";
-import { Badge24hr, ActiveBadge, ChargerTypeBadge, LocationTypeBadge } from "@/components/badges";
+import { Badge24hr, ActiveBadge, ChargerTypeBadge, LocationTypeBadge, DirectionBadge } from "@/components/badges";
 import { LightningIcon, MapPinIcon, PhoneIcon } from "@/components/icons";
 import { InfoTip } from "@/components/info-tip";
 
@@ -180,8 +180,9 @@ export function ChargerCard({ charger, isSelected, onSelect, index, onEdit, onDe
             </span>
           )}
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 flex-wrap justify-end">
           <MapsButton charger={charger} />
+          {charger.direction && <DirectionBadge direction={charger.direction} />}
           <LocationTypeBadge type={charger.location_type} />
         </div>
       </div>
